@@ -36,33 +36,27 @@ function register() {
 
   auth.createUserWithEmailAndPassword(email, password)
 
-  .then((userCredential) => {
+.then((userCredential)=>{
 
-      alert("Register berhasil");
+const user = userCredential.user;
 
-      window.location.href = "login.html";
+db.ref("users/" + user.uid).set({
 
-  })
+email: email,
+role: "user",
+createdAt: Date.now()
 
-  .catch((error) => {
+});
 
-      console.log(error);
+alert("Register berhasil");
 
-      if (error.code === "auth/email-already-in-use") {
+window.location = "login.html";
 
-        alert("Email sudah digunakan");
+})
 
-      } else if (error.code === "auth/weak-password") {
-
-        alert("Password minimal 6 karakter");
-
-      } else {
-
-        alert(error.message);
-
-      }
-
-  });
+.catch((error)=>{
+alert(error.message);
+});
 
 }
 
