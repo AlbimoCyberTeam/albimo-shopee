@@ -1,7 +1,7 @@
 const firebaseConfig = {
   apiKey: "AIzaSyB39WPXW-vV25QQiUB5Fkk9di4cUVfpCjo",
   authDomain: "albimo-shopee.firebaseapp.com",
-  databaseURL: "https://albimo-shopee-default-rtdb.firebaseio.com/",
+  databaseURL: "https://albimo-shopee-default-rtdb.asia-southeast1.firebasedatabase.app",
   projectId: "albimo-shopee",
   storageBucket: "albimo-shopee.firebasestorage.app",
   messagingSenderId: "349404045321",
