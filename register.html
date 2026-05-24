@@ -5,54 +5,48 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Register</title>
 <link rel="stylesheet" href="style.css">
-
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 </head>
 <body>
-
 <div class="auth-box">
 <h2>Register User</h2>
-
 <input type="email" id="email" placeholder="Masukkan email">
 <input type="password" id="password" placeholder="Masukkan password">
-
-<button type="button" onclick="register()">
-Register
-</button>
-
+<button type="button" onclick="registerUser()">Register</button>
 <p id="msg"></p>
 </div>
-
 <script src="firebase.js"></script>
-
 <script>
+function registerUser(){
+const email=document.getElementById('email').value;
+const password=document.getElementById('password').value;
 
-function register() {
+if(!email || !password){
+alert('Email dan password wajib diisi');
+return;
+}
 
-  const email = document.getElementById("email").value;
-  const password = document.getElementById("password").value;
+auth.createUserWithEmailAndPassword(email,password)
+.then((userCredential)=>{
+const user=userCredential.user;
 
-  createUserWithEmailAndPassword(auth, email, password)
-.then((userCredential) => {
-
-  const user = userCredential.user;
-
-  set(ref(db, 'users/' + user.uid), {
-    email: email,
-    role: "user",
-    createdAt: Date.now()
-  });
-
-  alert("Register berhasil");
-
+return db.ref('users/' + user.uid).set({
+email: email,
+role: 'user',
+createdAt: Date.now(),
+cart: []
+});
 })
-.catch((error) => {
-  alert(error.message);
+.then(()=>{
+alert('Register berhasil');
+window.location.href='login.html';
+})
+.catch((error)=>{
+document.getElementById('msg').innerText=error.message;
 });
 }
 </script>
-
 </body>
 </html>
