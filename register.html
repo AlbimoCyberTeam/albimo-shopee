@@ -34,31 +34,23 @@ function register() {
   const email = document.getElementById("email").value;
   const password = document.getElementById("password").value;
 
-  auth.createUserWithEmailAndPassword(email, password)
+  createUserWithEmailAndPassword(auth, email, password)
+.then((userCredential) => {
 
-.then((userCredential)=>{
+  const user = userCredential.user;
 
-const user = userCredential.user;
+  set(ref(db, 'users/' + user.uid), {
+    email: email,
+    role: "user",
+    createdAt: Date.now()
+  });
 
-db.ref("users/" + user.uid).set({
-
-email: email,
-role: "user",
-createdAt: Date.now()
-
-});
-
-alert("Register berhasil");
-
-window.location = "login.html";
+  alert("Register berhasil");
 
 })
-
-.catch((error)=>{
-alert(error.message);
+.catch((error) => {
+  alert(error.message);
 });
-
-}
 
 </script>
 
