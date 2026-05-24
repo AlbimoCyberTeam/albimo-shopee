@@ -27,3 +27,21 @@ Website online dalam beberapa menit.
 - Multi vendor UI
 - Tema hijau & gold
 
+
+
+## Fitur Baru
+- Login Admin terpisah
+- Login User terpisah
+- Validasi role admin/user
+- Reset Password Firebase
+- Proteksi halaman admin
+
+## Cara Membuat Admin
+1. Register user biasa
+2. Buka Firebase Realtime Database
+3. Masuk ke:
+users > UID_USER > role
+4. Ubah value:
+"user"
+menjadi:
+"admin"

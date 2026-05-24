@@ -99,5 +99,34 @@ window.location='admin-login.html';
 
 </script>
 
+
+<script src="firebase.js"></script>
+<script>
+auth.onAuthStateChanged((user)=>{
+
+if(!user){
+window.location.href = 'admin-login.html';
+return;
+}
+
+db.ref('users/' + user.uid).once('value')
+.then((snapshot)=>{
+
+if(snapshot.exists()){
+
+const data = snapshot.val();
+
+if(data.role !== 'admin'){
+alert('Akses ditolak');
+window.location.href = 'login.html';
+}
+
+}
+
+});
+
+});
+</script>
+
 </body>
 </html>
