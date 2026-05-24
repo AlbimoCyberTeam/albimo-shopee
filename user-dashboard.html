@@ -1,0 +1,130 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Albimo Marketplace</title>
+
+<link rel="stylesheet" href="style.css">
+
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+</head>
+
+<body>
+
+<header>
+<div class="logo">ALBIMO SHOPEE</div>
+
+<nav>
+<a href="index.html">Home</a>
+<a href="cart.html">Keranjang</a>
+<a href="#" onclick="logout()">Logout</a>
+</nav>
+</header>
+
+<section class="hero">
+<h1>Albimo Marketplace Premium</h1>
+<p>Marketplace realtime modern berbasis Firebase dengan tampilan premium.</p>
+</section>
+
+<div class="search-box">
+<input type="text" id="searchInput" placeholder="Cari produk..." onkeyup="searchProducts()">
+</div>
+
+<div class="products-grid" id="productList"></div>
+
+<footer>
+© Albimo Shopee Premium
+</footer>
+
+<script src="firebase.js"></script>
+
+<script>
+
+auth.onAuthStateChanged((user)=>{
+
+if(user){
+loadProducts();
+}else{
+window.location='login.html';
+}
+
+});
+
+function loadProducts(){
+
+const list=document.getElementById('productList');
+
+db.ref('products').on('value',(snapshot)=>{
+
+list.innerHTML='';
+
+snapshot.forEach((child)=>{
+
+const product=child.val();
+
+list.innerHTML += `
+<div class="product-card">
+<img src="${product.image}">
+<div class="product-content">
+<h3>${product.name}</h3>
+<p class="price">Rp ${product.price}</p>
+<p>${product.description || ''}</p>
+
+<button onclick="addCart('${product.name}','${product.price}','${product.image}')">
+Tambah Keranjang
+</button>
+
+</div>
+</div>
+`;
+
+});
+
+});
+
+}
+
+function addCart(name,price,image){
+
+const cart=JSON.parse(localStorage.getItem('cart') || '[]');
+
+cart.push({name,price,image});
+
+localStorage.setItem('cart',JSON.stringify(cart));
+
+alert('Produk ditambahkan ke keranjang');
+
+}
+
+function searchProducts(){
+
+const input=document.getElementById('searchInput').value.toLowerCase();
+
+const cards=document.querySelectorAll('.product-card');
+
+cards.forEach(card=>{
+
+const text=card.innerText.toLowerCase();
+
+card.style.display=text.includes(input) ? 'block' : 'none';
+
+});
+
+}
+
+function logout(){
+
+auth.signOut();
+
+window.location='login.html';
+
+}
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,53 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Keranjang</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+<div class="logo">KERANJANG</div>
+<nav>
+<a href="user-dashboard.html">Kembali</a>
+</nav>
+</header>
+
+<div class="products-grid" id="cartList"></div>
+
+<script>
+
+const cart=JSON.parse(localStorage.getItem('cart') || '[]');
+
+const list=document.getElementById('cartList');
+
+if(cart.length===0){
+list.innerHTML='<h2>Keranjang kosong</h2>';
+}
+
+cart.forEach(item=>{
+
+list.innerHTML += `
+<div class="product-card">
+<img src="${item.image}">
+<div class="product-content">
+<h3>${item.name}</h3>
+<p class="price">Rp ${item.price}</p>
+<button onclick="checkout()">Checkout</button>
+</div>
+</div>
+`;
+
+});
+
+function checkout(){
+alert('Checkout berhasil');
+}
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,104 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Dashboard</title>
+
+<link rel="stylesheet" href="style.css">
+
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+</head>
+
+<body>
+
+<header>
+<div class="logo">ADMIN PANEL</div>
+<nav>
+<a href="#" onclick="logout()">Logout</a>
+</nav>
+</header>
+
+<div class="card">
+<h2>Upload Produk</h2>
+
+<input type="text" id="productName" placeholder="Nama Produk">
+<input type="number" id="productPrice" placeholder="Harga Produk">
+<input type="text" id="productImage" placeholder="Link Gambar">
+<textarea id="productDesc" placeholder="Deskripsi"></textarea>
+
+<button onclick="uploadProduct()">Upload Produk</button>
+
+</div>
+
+<div class="products-grid" id="productList"></div>
+
+<script src="firebase.js"></script>
+
+<script>
+
+function uploadProduct(){
+
+const name=document.getElementById('productName').value;
+const price=document.getElementById('productPrice').value;
+const image=document.getElementById('productImage').value;
+const description=document.getElementById('productDesc').value;
+
+if(!name || !price || !image){
+alert('Lengkapi data');
+return;
+}
+
+db.ref('products').push({
+name,
+price,
+image,
+description
+});
+
+alert('Produk berhasil diupload');
+
+}
+
+function loadProducts(){
+
+const list=document.getElementById('productList');
+
+db.ref('products').on('value',(snapshot)=>{
+
+list.innerHTML='';
+
+snapshot.forEach((child)=>{
+
+const data=child.val();
+
+list.innerHTML += `
+<div class="product-card">
+<img src="${data.image}">
+<div class="product-content">
+<h3>${data.name}</h3>
+<p class="price">Rp ${data.price}</p>
+<p>${data.description}</p>
+</div>
+</div>
+`;
+
+});
+
+});
+
+}
+
+loadProducts();
+
+function logout(){
+window.location='admin-login.html';
+}
+
+</script>
+
+</body>
+</html>

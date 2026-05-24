@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Register</title>
+<link rel="stylesheet" href="style.css">
+
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+</head>
+<body>
+
+<div class="auth-box">
+<h2>Register User</h2>
+
+<input type="email" id="email" placeholder="Masukkan email">
+<input type="password" id="password" placeholder="Masukkan password">
+
+<button type="button" onclick="register()">
+Register
+</button>
+
+<p id="msg"></p>
+</div>
+
+<script src="firebase.js"></script>
+
+<script>
+
+function register() {
+
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+
+  auth.createUserWithEmailAndPassword(email, password)
+
+  .then((userCredential) => {
+
+      alert("Register berhasil");
+
+      window.location.href = "login.html";
+
+  })
+
+  .catch((error) => {
+
+      console.log(error);
+
+      if (error.code === "auth/email-already-in-use") {
+
+        alert("Email sudah digunakan");
+
+      } else if (error.code === "auth/weak-password") {
+
+        alert("Password minimal 6 karakter");
+
+      } else {
+
+        alert(error.message);
+
+      }
+
+  });
+
+}
+
+</script>
+
+</body>
+</html>
