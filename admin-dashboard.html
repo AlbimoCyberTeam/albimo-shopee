@@ -3,51 +3,50 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin Dashboard</title>
-
+<title>Admin Dashboard Premium</title>
 <link rel="stylesheet" href="style.css">
 
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 </head>
-
 <body>
 
 <header>
 <div class="logo">ADMIN PANEL</div>
 <nav>
-<a href="#" onclick="logout()">Logout</a>
+<a href="#" onclick="logoutUser('admin-login.html')">Logout</a>
 </nav>
 </header>
 
 <div class="card">
-<h2>Upload Produk</h2>
+<h2>Tambah Produk</h2>
 
 <input type="text" id="productName" placeholder="Nama Produk">
 <input type="number" id="productPrice" placeholder="Harga Produk">
-<input type="text" id="productImage" placeholder="Link Gambar">
-<textarea id="productDesc" placeholder="Deskripsi"></textarea>
+<input type="text" id="productImage" placeholder="URL Gambar">
+<textarea id="productDesc" placeholder="Deskripsi Produk"></textarea>
 
 <button onclick="uploadProduct()">Upload Produk</button>
-
 </div>
 
+<h2 style="padding:20px;">Daftar Produk</h2>
 <div class="products-grid" id="productList"></div>
 
 <script src="firebase.js"></script>
+<script src="auth.js"></script>
 
 <script>
+checkRole('admin', 'admin-login.html');
 
 function uploadProduct(){
-
-const name=document.getElementById('productName').value;
-const price=document.getElementById('productPrice').value;
-const image=document.getElementById('productImage').value;
-const description=document.getElementById('productDesc').value;
+const name = document.getElementById('productName').value;
+const price = document.getElementById('productPrice').value;
+const image = document.getElementById('productImage').value;
+const description = document.getElementById('productDesc').value;
 
 if(!name || !price || !image){
-alert('Lengkapi data');
+alert('Semua data wajib diisi');
 return;
 }
 
@@ -55,77 +54,50 @@ db.ref('products').push({
 name,
 price,
 image,
-description
+description,
+createdAt: Date.now()
 });
 
-alert('Produk berhasil diupload');
+alert('Produk berhasil ditambahkan');
 
+document.getElementById('productName').value='';
+document.getElementById('productPrice').value='';
+document.getElementById('productImage').value='';
+document.getElementById('productDesc').value='';
 }
 
 function loadProducts(){
-
-const list=document.getElementById('productList');
+const list = document.getElementById('productList');
 
 db.ref('products').on('value',(snapshot)=>{
-
 list.innerHTML='';
 
 snapshot.forEach((child)=>{
-
-const data=child.val();
+const data = child.val();
 
 list.innerHTML += `
 <div class="product-card">
 <img src="${data.image}">
 <div class="product-content">
 <h3>${data.name}</h3>
-<p class="price">Rp ${data.price}</p>
-<p>${data.description}</p>
+<p>Rp ${data.price}</p>
+<p>${data.description || ''}</p>
+<button onclick="deleteProduct('${child.key}')">Hapus Produk</button>
 </div>
 </div>
 `;
-
 });
-
 });
+}
 
+function deleteProduct(id){
+if(confirm('Yakin ingin menghapus produk?')){
+db.ref('products/' + id).remove();
+alert('Produk dihapus');
+}
 }
 
 loadProducts();
-
-function logout(){
-window.location='admin-login.html';
-}
-
-</script>
-
-
-<script src="firebase.js"></script>
-<script>
-auth.onAuthStateChanged((user)=>{
-
-if(!user){
-window.location.href = 'admin-login.html';
-return;
-}
-
-db.ref('users/' + user.uid).once('value')
-.then((snapshot)=>{
-
-if(snapshot.exists()){
-
-const data = snapshot.val();
-
-if(data.role !== 'admin'){
-alert('Akses ditolak');
-window.location.href = 'login.html';
-}
-
-}
-
-});
-
-});
 </script>
 
 </body>

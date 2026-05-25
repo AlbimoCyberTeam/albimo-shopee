@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Keranjang</title>
+<title>Keranjang Belanja</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -15,37 +15,53 @@
 </nav>
 </header>
 
-<div class="products-grid" id="cartList"></div>
+<div id="cartContainer" class="products-grid"></div>
+
+<div class="card">
+<h2>Total</h2>
+<p id="totalPrice">Rp 0</p>
+<button onclick="checkout()">Checkout Sekarang</button>
+</div>
 
 <script>
+const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+const container = document.getElementById('cartContainer');
 
-const cart=JSON.parse(localStorage.getItem('cart') || '[]');
+let total = 0;
 
-const list=document.getElementById('cartList');
+cart.forEach((item,index)=>{
+total += Number(item.price);
 
-if(cart.length===0){
-list.innerHTML='<h2>Keranjang kosong</h2>';
-}
-
-cart.forEach(item=>{
-
-list.innerHTML += `
+container.innerHTML += `
 <div class="product-card">
 <img src="${item.image}">
 <div class="product-content">
 <h3>${item.name}</h3>
-<p class="price">Rp ${item.price}</p>
-<button onclick="checkout()">Checkout</button>
+<p>Rp ${item.price}</p>
+<button onclick="removeItem(${index})">Hapus</button>
 </div>
 </div>
 `;
-
 });
 
-function checkout(){
-alert('Checkout berhasil');
+document.getElementById('totalPrice').innerText = 'Rp ' + total;
+
+function removeItem(index){
+cart.splice(index,1);
+localStorage.setItem('cart', JSON.stringify(cart));
+location.reload();
 }
 
+function checkout(){
+if(cart.length === 0){
+alert('Keranjang kosong');
+return;
+}
+
+alert('Checkout berhasil');
+localStorage.removeItem('cart');
+location.reload();
+}
 </script>
 
 </body>

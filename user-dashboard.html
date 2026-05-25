@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Albimo Marketplace</title>
+<title>User Marketplace</title>
 
 <link rel="stylesheet" href="style.css">
 
@@ -11,22 +11,19 @@
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 </head>
-
 <body>
 
 <header>
 <div class="logo">ALBIMO SHOPEE</div>
-
 <nav>
-<a href="index.html">Home</a>
 <a href="cart.html">Keranjang</a>
-<a href="#" onclick="logout()">Logout</a>
+<a href="#" onclick="logoutUser('login.html')">Logout</a>
 </nav>
 </header>
 
 <section class="hero">
-<h1>Albimo Marketplace Premium</h1>
-<p>Marketplace realtime modern berbasis Firebase dengan tampilan premium.</p>
+<h1>Marketplace Premium</h1>
+<p>Belanja mudah dan cepat</p>
 </section>
 
 <div class="search-box">
@@ -35,35 +32,20 @@
 
 <div class="products-grid" id="productList"></div>
 
-<footer>
-© Albimo Shopee Premium
-</footer>
-
 <script src="firebase.js"></script>
+<script src="auth.js"></script>
 
 <script>
-
-auth.onAuthStateChanged((user)=>{
-
-if(user){
-loadProducts();
-}else{
-window.location='login.html';
-}
-
-});
+checkRole('user', 'login.html');
 
 function loadProducts(){
-
-const list=document.getElementById('productList');
+const list = document.getElementById('productList');
 
 db.ref('products').on('value',(snapshot)=>{
-
 list.innerHTML='';
 
 snapshot.forEach((child)=>{
-
-const product=child.val();
+const product = child.val();
 
 list.innerHTML += `
 <div class="product-card">
@@ -80,49 +62,28 @@ Tambah Keranjang
 </div>
 </div>
 `;
-
 });
-
 });
-
 }
 
 function addCart(name,price,image){
-
-const cart=JSON.parse(localStorage.getItem('cart') || '[]');
-
+const cart = JSON.parse(localStorage.getItem('cart') || '[]');
 cart.push({name,price,image});
-
-localStorage.setItem('cart',JSON.stringify(cart));
-
-alert('Produk ditambahkan ke keranjang');
-
+localStorage.setItem('cart', JSON.stringify(cart));
+alert('Produk berhasil ditambahkan ke keranjang');
 }
 
 function searchProducts(){
-
-const input=document.getElementById('searchInput').value.toLowerCase();
-
-const cards=document.querySelectorAll('.product-card');
+const input = document.getElementById('searchInput').value.toLowerCase();
+const cards = document.querySelectorAll('.product-card');
 
 cards.forEach(card=>{
-
-const text=card.innerText.toLowerCase();
-
-card.style.display=text.includes(input) ? 'block' : 'none';
-
+card.style.display = card.innerText.toLowerCase().includes(input)
+? 'block' : 'none';
 });
-
 }
 
-function logout(){
-
-auth.signOut();
-
-window.location='login.html';
-
-}
-
+loadProducts();
 </script>
 
 </body>
