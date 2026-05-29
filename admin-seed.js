@@ -1,7 +1,7 @@
 
 // AUTO ADMIN ACCOUNT
-const AUTO_ADMIN_EMAIL = "admin22@gmail.com";
-const AUTO_ADMIN_PASSWORD = "admin1984";
+const AUTO_ADMIN_EMAIL = "admin@gmail.com";
+const AUTO_ADMIN_PASSWORD = "admin123";
 
 async function createDefaultAdmin(){
     try{
