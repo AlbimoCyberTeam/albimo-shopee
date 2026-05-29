@@ -2,10 +2,10 @@
 ADMIN LOGIN DEFAULT
 
 Email:
-admin22@gmail.com
+admin@gmail.com
 
 Password:
-admin1984
+adminxxxx
 
 Catatan:
 - Saat website pertama kali dibuka, akun admin otomatis dibuat.
