@@ -6,9 +6,9 @@ color:#222;
 }
 header{
 display:flex;
-justify-content:space-between;
-align-items:center;
-padding:15px 20px;
+justify-content: center;
+align-items: center;
+padding:20px 20px;
 background:#ee4d2d;
 color:#fff;
 position:sticky;
