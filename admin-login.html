@@ -1,66 +1,8 @@
 <!DOCTYPE html>
-<html lang="id">
+<html>
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Login Admin</title>
-<link rel="stylesheet" href="style.css">
-
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+<meta http-equiv="refresh" content="0; url=login.html">
 </head>
 <body>
-
-<div class="auth-box">
-<h2>Login Admin</h2>
-
-<input type="email" id="email" placeholder="Email Admin">
-<input type="password" id="password" placeholder="Password Admin">
-
-<button onclick="loginAdmin()">Login Admin</button>
-
-<p id="msg"></p>
-</div>
-
-<script src="firebase.js"></script>
-
-<script>
-function loginAdmin(){
-
-const email=document.getElementById('email').value;
-const password=document.getElementById('password').value;
-
-auth.signInWithEmailAndPassword(email,password)
-.then((userCredential)=>{
-
-const user=userCredential.user;
-
-db.ref('users/' + user.uid).once('value')
-.then((snapshot)=>{
-
-if(snapshot.exists()){
-
-const data=snapshot.val();
-
-if(data.role === 'admin'){
-window.location.href = "admin-dashboard.html";
-}else{
-alert('Akun ini bukan admin');
-auth.signOut();
-}
-
-}
-
-});
-
-})
-.catch((error)=>{
-document.getElementById('msg').innerHTML=error.message;
-});
-
-}
-</script>
-
 </body>
 </html>

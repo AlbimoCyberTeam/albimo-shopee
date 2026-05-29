@@ -22,6 +22,11 @@
 <div class="card">
 <h2>Total Belanja</h2>
 <p id="totalPrice">Rp 0</p>
+
+<input type="text" id="customerName" placeholder="Nama Lengkap">
+<input type="text" id="customerPhone" placeholder="Nomor HP Aktif">
+<textarea id="customerAddress" placeholder="Alamat Lengkap"></textarea>
+
 <button onclick="checkout()">Checkout Sekarang</button>
 </div>
 
@@ -80,9 +85,21 @@ window.location.href = 'login.html';
 return;
 }
 
+const customerName = document.getElementById('customerName').value.trim();
+const customerPhone = document.getElementById('customerPhone').value.trim();
+const customerAddress = document.getElementById('customerAddress').value.trim();
+
+if(!customerName || !customerPhone || !customerAddress){
+alert('Nama, nomor HP dan alamat wajib diisi');
+return;
+}
+
 const orderData = {
 userId: user.uid,
 userEmail: user.email,
+customerName,
+customerPhone,
+customerAddress,
 items: cart,
 total: total,
 status: 'Menunggu Konfirmasi',

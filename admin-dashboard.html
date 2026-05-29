@@ -127,7 +127,10 @@ Harga: Rp ${Number(item.price).toLocaleString('id-ID')}
 
 container.innerHTML += `
 <div class="order-box">
-<h3>${order.userEmail}</h3>
+<h3>${order.customerName || '-'}</h3>
+<p><strong>Email User:</strong> ${order.userEmail}</p>
+<p><strong>Nomor HP:</strong> ${order.customerPhone || '-'}</p>
+<p><strong>Alamat:</strong><br>${order.customerAddress || '-'}</p>
 <p><strong>Total:</strong> Rp ${Number(order.total).toLocaleString('id-ID')}</p>
 <p><strong>Waktu:</strong> ${new Date(order.checkoutAt).toLocaleString('id-ID')}</p>
 <div class="status-badge">${order.status}</div>
