@@ -5,38 +5,45 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Admin Dashboard Premium</title>
 <link rel="stylesheet" href="style.css">
-
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+<style>
+.order-box{background:#fff;padding:20px;border-radius:16px;margin:20px;box-shadow:0 5px 20px rgba(0,0,0,.08)}
+.order-item{padding:10px 0;border-bottom:1px solid #ddd}
+.status-badge{display:inline-block;padding:6px 12px;border-radius:30px;background:#111;color:#fff;font-size:12px;margin-top:10px}
+.select-status{padding:10px;border-radius:10px;margin-top:10px;width:100%}
+</style>
 </head>
 <body>
-
 <header>
 <div class="logo">ADMIN PANEL</div>
 <nav>
+<a href="#ordersSection">Checkout User</a>
 <a href="#" onclick="logoutUser('admin-login.html')">Logout</a>
 </nav>
 </header>
 
 <div class="card">
 <h2>Tambah Produk</h2>
-
 <input type="text" id="productName" placeholder="Nama Produk">
 <input type="number" id="productPrice" placeholder="Harga Produk">
 <input type="text" id="productImage" placeholder="URL Gambar">
 <textarea id="productDesc" placeholder="Deskripsi Produk"></textarea>
-
 <button onclick="uploadProduct()">Upload Produk</button>
 </div>
 
 <h2 style="padding:20px;">Daftar Produk</h2>
 <div class="products-grid" id="productList"></div>
 
+<section id="ordersSection">
+<h2 style="padding:20px;">Data Checkout User</h2>
+<div id="ordersContainer"></div>
+</section>
+
 <script src="firebase.js"></script>
 <script src="auth.js"></script>
 <script src="admin-seed.js"></script>
-
 <script>
 checkRole('admin', 'admin-login.html');
 
@@ -81,7 +88,7 @@ list.innerHTML += `
 <img src="${data.image}">
 <div class="product-content">
 <h3>${data.name}</h3>
-<p>Rp ${data.price}</p>
+<p>Rp ${Number(data.price).toLocaleString('id-ID')}</p>
 <p>${data.description || ''}</p>
 <button onclick="deleteProduct('${child.key}')">Hapus Produk</button>
 </div>
@@ -98,8 +105,53 @@ alert('Produk dihapus');
 }
 }
 
-loadProducts();
-</script>
+function loadOrders(){
+const container = document.getElementById('ordersContainer');
 
+db.ref('orders').on('value', (snapshot)=>{
+container.innerHTML = '';
+
+if(!snapshot.exists()){
+container.innerHTML = '<div class="order-box"><h3>Belum ada checkout user</h3></div>';
+return;
+}
+
+snapshot.forEach((child)=>{
+const order = child.val();
+const itemsHtml = order.items.map(item => `
+<div class="order-item">
+<strong>${item.name}</strong><br>
+Harga: Rp ${Number(item.price).toLocaleString('id-ID')}
+</div>
+`).join('');
+
+container.innerHTML += `
+<div class="order-box">
+<h3>${order.userEmail}</h3>
+<p><strong>Total:</strong> Rp ${Number(order.total).toLocaleString('id-ID')}</p>
+<p><strong>Waktu:</strong> ${new Date(order.checkoutAt).toLocaleString('id-ID')}</p>
+<div class="status-badge">${order.status}</div>
+<h4>Produk Checkout:</h4>
+${itemsHtml}
+<select class="select-status" onchange="updateOrderStatus('${child.key}', this.value)">
+<option value="Menunggu Konfirmasi" ${order.status === 'Menunggu Konfirmasi' ? 'selected' : ''}>Menunggu Konfirmasi</option>
+<option value="Diproses" ${order.status === 'Diproses' ? 'selected' : ''}>Diproses</option>
+<option value="Dikirim" ${order.status === 'Dikirim' ? 'selected' : ''}>Dikirim</option>
+<option value="Selesai" ${order.status === 'Selesai' ? 'selected' : ''}>Selesai</option>
+</select>
+</div>
+`;
+});
+});
+}
+
+function updateOrderStatus(orderId, status){
+db.ref('orders/' + orderId + '/status').set(status)
+.then(()=> alert('Status pesanan diperbarui'));
+}
+
+loadProducts();
+loadOrders();
+</script>
 </body>
 </html>

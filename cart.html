@@ -5,9 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Keranjang Belanja</title>
 <link rel="stylesheet" href="style.css">
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 </head>
 <body>
-
 <header>
 <div class="logo">KERANJANG</div>
 <nav>
@@ -18,16 +20,27 @@
 <div id="cartContainer" class="products-grid"></div>
 
 <div class="card">
-<h2>Total</h2>
+<h2>Total Belanja</h2>
 <p id="totalPrice">Rp 0</p>
 <button onclick="checkout()">Checkout Sekarang</button>
 </div>
 
+<script src="firebase.js"></script>
+<script src="auth.js"></script>
 <script>
+checkRole('user', 'login.html');
+
 const cart = JSON.parse(localStorage.getItem('cart') || '[]');
 const container = document.getElementById('cartContainer');
-
 let total = 0;
+
+function renderCart(){
+container.innerHTML = '';
+total = 0;
+
+if(cart.length === 0){
+container.innerHTML = '<div class="card"><h3>Keranjang masih kosong</h3></div>';
+}
 
 cart.forEach((item,index)=>{
 total += Number(item.price);
@@ -37,19 +50,20 @@ container.innerHTML += `
 <img src="${item.image}">
 <div class="product-content">
 <h3>${item.name}</h3>
-<p>Rp ${item.price}</p>
+<p>Rp ${Number(item.price).toLocaleString('id-ID')}</p>
 <button onclick="removeItem(${index})">Hapus</button>
 </div>
 </div>
 `;
 });
 
-document.getElementById('totalPrice').innerText = 'Rp ' + total;
+document.getElementById('totalPrice').innerText = 'Rp ' + total.toLocaleString('id-ID');
+}
 
 function removeItem(index){
 cart.splice(index,1);
 localStorage.setItem('cart', JSON.stringify(cart));
-location.reload();
+renderCart();
 }
 
 function checkout(){
@@ -58,11 +72,37 @@ alert('Keranjang kosong');
 return;
 }
 
-alert('Checkout berhasil');
-localStorage.removeItem('cart');
-location.reload();
-}
-</script>
+const user = auth.currentUser;
 
+if(!user){
+alert('Silakan login terlebih dahulu');
+window.location.href = 'login.html';
+return;
+}
+
+const orderData = {
+userId: user.uid,
+userEmail: user.email,
+items: cart,
+total: total,
+status: 'Menunggu Konfirmasi',
+checkoutAt: Date.now()
+};
+
+const orderId = db.ref('orders').push().key;
+
+db.ref('orders/' + orderId).set(orderData)
+.then(()=>{
+alert('Checkout berhasil dan pesanan masuk ke admin');
+localStorage.removeItem('cart');
+window.location.reload();
+})
+.catch((error)=>{
+alert('Checkout gagal: ' + error.message);
+});
+}
+
+renderCart();
+</script>
 </body>
 </html>
