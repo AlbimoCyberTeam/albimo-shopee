@@ -10,36 +10,15 @@
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
-<style>
-.role-box{
-display:flex;
-gap:10px;
-margin-bottom:15px;
-}
-.role-btn{
-flex:1;
-padding:10px;
-border:none;
-border-radius:8px;
-cursor:pointer;
-background:#e5e7eb;
-font-weight:bold;
-}
-.role-btn.active{
-background:#111827;
-color:white;
-}
-</style>
 </head>
 <body>
 
 <div class="auth-box">
 <h2>Login User & Admin</h2>
 
-<div class="role-box">
-<button class="role-btn active" id="userBtn" onclick="setRole('user')">User</button>
-<button class="role-btn" id="adminBtn" onclick="setRole('admin')">Admin</button>
-</div>
+<p style="text-align:center;margin-bottom:15px;">
+Silakan login menggunakan akun Anda
+</p>
 
 <input type="email" id="email" placeholder="Masukkan email">
 <input type="password" id="password" placeholder="Masukkan password">
@@ -59,21 +38,6 @@ Masuk Sekarang
 <script src="firebase.js"></script>
 
 <script>
-let selectedRole = 'user';
-
-function setRole(role){
-selectedRole = role;
-
-document.getElementById('userBtn').classList.remove('active');
-document.getElementById('adminBtn').classList.remove('active');
-
-if(role === 'user'){
-  document.getElementById('userBtn').classList.add('active');
-}else{
-  document.getElementById('adminBtn').classList.add('active');
-}
-}
-
 function loginAccount() {
 
 const email = document.getElementById("email").value;
@@ -89,34 +53,33 @@ auth.signInWithEmailAndPassword(email, password)
 
 const user = userCredential.user;
 
- db.ref('users/' + user.uid).once('value')
- .then((snapshot)=>{
+db.ref('users/' + user.uid).once('value')
+.then((snapshot)=>{
 
- if(snapshot.exists()){
+if(snapshot.exists()){
 
- const data = snapshot.val();
+const data = snapshot.val();
 
- if(data.role === selectedRole){
+if(data.role === 'admin'){
 
-   if(selectedRole === 'admin'){
-      alert('Login admin berhasil');
-      window.location.href = 'admin-dashboard.html';
-   }else{
-      alert('Login user berhasil');
-      window.location.href = 'user-dashboard.html';
-   }
+alert('Login admin berhasil');
+window.location.href = 'admin-dashboard.html';
 
- }else{
-   alert('Role akun tidak sesuai');
-   auth.signOut();
- }
+}else{
 
- }else{
- alert('Data akun tidak ditemukan');
- auth.signOut();
- }
+alert('Login user berhasil');
+window.location.href = 'user-dashboard.html';
 
- });
+}
+
+}else{
+
+alert('Data akun tidak ditemukan');
+auth.signOut();
+
+}
+
+});
 
 })
 .catch((error) => {
