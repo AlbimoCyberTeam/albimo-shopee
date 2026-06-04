@@ -4,6 +4,14 @@ font-family:Arial,sans-serif;
 background:#f5f5f5;
 color:#222;
 }
+.logo {
+  margin-right: 15px; /* Jarak jika teks ada di kanan logo */
+  /* margin-bottom: 15px; -> Gunakan ini jika teks ada di bawah logo */
+}
+.title {
+  margin-right: 15px; /* Jarak jika teks ada di kanan logo */
+  margin-bottom: 15px; -> Gunakan ini jika teks ada di bawah logo */
+}
 header{
 display:flex;
 justify-content: center;
