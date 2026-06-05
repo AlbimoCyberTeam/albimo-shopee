@@ -1,86 +1,108 @@
+
+:root{
+--primary:#1e90ff;
+--primary-dark:#0b6fd6;
+--bg:#f4f9ff;
+--white:#ffffff;
+--text:#1f2937;
+}
+*{box-sizing:border-box}
 body{
 margin:0;
 font-family:Arial,sans-serif;
-background:#f5f5f5;
-color:#222;
+background:var(--bg);
+color:var(--text);
 }
 header{
 display:flex;
-justify-content: center;
-align-items: center;
-padding:20px 20px;
-background:#ee4d2d;
+justify-content:center;
+align-items:center;
+padding:20px;
+background:var(--primary);
 color:#fff;
 position:sticky;
 top:0;
+z-index:1000;
+box-shadow:0 2px 10px rgba(0,0,0,.1);
 }
+nav{display:flex;flex-wrap:wrap;gap:10px}
 nav a{
 color:#fff;
 text-decoration:none;
-margin:0 10px;
 font-size:14px;
+font-weight:600;
 }
 .hero{
 text-align:center;
 padding:60px 20px;
-background:linear-gradient(45deg,#ee4d2d,#ff7337);
+background:linear-gradient(135deg,var(--primary),#7ec8ff);
 color:#fff;
 }
 button{
-background:#ee4d2d;
+background:var(--primary);
 color:#fff;
 border:none;
 padding:12px 18px;
 border-radius:8px;
 cursor:pointer;
 font-weight:bold;
+transition:.2s;
 }
+button:hover{background:var(--primary-dark)}
 .auth-box,.card{
-max-width:400px;
+max-width:500px;
 margin:30px auto;
 background:#fff;
 padding:20px;
 border-radius:14px;
-box-shadow:0 2px 10px rgba(0,0,0,.1);
+box-shadow:0 4px 15px rgba(0,0,0,.08);
 }
 input,textarea{
 width:100%;
 padding:12px;
 margin:10px 0;
-border:1px solid #ddd;
+border:1px solid #cfe4ff;
 border-radius:8px;
-box-sizing:border-box;
 }
 .products-grid,.product-grid{
 display:grid;
-grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-gap:15px;
+grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+gap:20px;
 padding:20px;
+align-items:stretch;
 }
 .product-card{
 background:#fff;
 border-radius:14px;
 overflow:hidden;
-box-shadow:0 2px 10px rgba(0,0,0,.08);
+box-shadow:0 4px 12px rgba(0,0,0,.08);
+display:flex;
+flex-direction:column;
+height:100%;
 }
 .product-card img{
 width:100%;
-height:220px;
+height:240px;
 object-fit:cover;
+display:block;
+background:#eef6ff;
 }
 .product-content{
 padding:15px;
+display:flex;
+flex-direction:column;
+gap:10px;
+flex:1;
 }
 .price{
-color:#ee4d2d;
+color:var(--primary);
 font-size:18px;
 font-weight:bold;
 }
-.search-box{
-padding:20px;
-}
+.search-box{padding:20px}
 footer{
 text-align:center;
 padding:20px;
+background:#fff;
+margin-top:20px;
 }
-
