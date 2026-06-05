@@ -4,21 +4,13 @@ font-family:Arial,sans-serif;
 background:#f5f5f5;
 color:#222;
 }
-.logo {
-  margin-right: 15px; /* Jarak jika teks ada di kanan logo */
-  /* margin-bottom: 15px; -> Gunakan ini jika teks ada di bawah logo */
-}
-.h2 {
-  margin-right: 15px; /* Jarak jika teks ada di kanan logo */
-  margin-top: 10px; -> Gunakan ini jika teks ada di bawah logo */
-}
 header{
 display:flex;
 justify-content: center;
 align-items: center;
 padding:20px 20px;
-background:#304ffe;
-color:#000;
+background:#ee4d2d;
+color:#fff;
 position:sticky;
 top:0;
 }
@@ -30,13 +22,12 @@ font-size:14px;
 }
 .hero{
 text-align:center;
-width:100%;
-height:100%;
-background:linear-gradient(45deg,#ffffff,#eeeeee);
-color:#000;
+padding:60px 20px;
+background:linear-gradient(45deg,#ee4d2d,#ff7337);
+color:#fff;
 }
 button{
-background:#304ffe;
+background:#ee4d2d;
 color:#fff;
 border:none;
 padding:12px 18px;
@@ -81,7 +72,7 @@ object-fit:cover;
 padding:15px;
 }
 .price{
-color:#304ffe;
+color:#ee4d2d;
 font-size:18px;
 font-weight:bold;
 }
