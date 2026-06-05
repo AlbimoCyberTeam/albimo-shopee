@@ -10,7 +10,7 @@ color:#222;
 }
 .h2 {
   margin-right: 15px; /* Jarak jika teks ada di kanan logo */
-  margin-bottom: 15px; -> Gunakan ini jika teks ada di bawah logo */
+  margin-top: 10px; -> Gunakan ini jika teks ada di bawah logo */
 }
 header{
 display:flex;
@@ -32,7 +32,7 @@ font-size:14px;
 text-align:center;
 padding:60px 20px;
 background:linear-gradient(45deg,#ffffff,#eeeeee);
-color:#fff;
+color:#000;
 }
 button{
 background:#304ffe;
