@@ -1,10 +1,10 @@
 
 :root{
---primary:#1e90ff;
---primary-dark:#0b6fd6;
---bg:#f4f9ff;
+--primary:#1a237e;
+--primary-dark:#304ffe;
+--bg:#2962ff;
 --black:#000000;
---text:#000000;
+--text:#ffffff;
 }
 *{box-sizing:border-box}
 body{
@@ -29,7 +29,7 @@ font-weight:600;
 .hero{
 text-align:center;
 padding:60px 20px;
-background:linear-gradient(135deg,var(--primary),#7ec8ff);
+background:linear-gradient(135deg,var(--primary),#1a237e);
 color:#000;
 }
 button{
@@ -46,7 +46,7 @@ button:hover{background:var(--primary-dark)}
 .auth-box,.card{
 max-width:500px;
 margin:30px auto;
-background:#1a237e;
+background:#304ffe;
 padding:20px;
 border-radius:14px;
 box-shadow:0 4px 15px rgba(0,0,0,.08);
