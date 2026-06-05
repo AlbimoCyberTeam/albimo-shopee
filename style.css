@@ -2,45 +2,80 @@
     --primary:#0f4cbd;
     --primary-dark:#0a3691;
     --secondary:#2da9ff;
-    --bg:#ffffff;
+    --bg:#f8fafc;
     --card:#ffffff;
     --text:#1f2937;
     --border:#e5e7eb;
     --shadow:0 8px 25px rgba(0,0,0,.08);
 }
 
+*{
+    box-sizing:border-box;
+}
+
+html,body{
+    max-width:100%;
+    overflow-x:hidden;
+}
+
 body{
     margin:0;
     font-family:'Segoe UI',Arial,sans-serif;
-    background:#f8fafc;
+    background:var(--bg);
     color:var(--text);
 }
-
 
 header{
     display:flex;
     justify-content:space-between;
     align-items:center;
-    padding:15px 25px;
+    flex-wrap:wrap;
+    padding:18px 30px;
+    background:#ffffff;
+    box-shadow:0 2px 10px rgba(0,0,0,.05);
 }
-nav{display:flex;flex-wrap:wrap;gap:10px}
+
+.logo{
+    color:var(--primary);
+    font-size:24px;
+    font-weight:700;
+    letter-spacing:.5px;
+}
+
+nav{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    margin-left:auto;
+}
+
 nav a{
-color:#000;
-text-decoration:none;
-font-size:14px;
-font-weight:600;
+    color:var(--text);
+    text-decoration:none;
+    font-size:14px;
+    font-weight:600;
+    margin-left:20px;
+    transition:.3s;
+}
+
+nav a:hover{
+    color:var(--primary);
 }
 
 .hero{
     text-align:center;
     padding:60px 20px;
-    background:linear-gradient(
-        135deg,
-        #2da9ff,
-        #1d7df2,
-        #0f4cbd
-    );
+    background:linear-gradient(135deg,#2da9ff,#1d7df2,#0f4cbd);
     color:#ffffff;
+}
+
+.hero img{
+    width:auto !important;
+    max-width:90% !important;
+    max-height:260px !important;
+    object-fit:contain;
+    margin:0 auto;
+    display:block;
 }
 
 button{
@@ -60,6 +95,15 @@ button:hover{
     transform:translateY(-2px);
 }
 
+.card{
+    max-width:500px;
+    margin:30px auto;
+    background:#ffffff;
+    padding:20px;
+    border-radius:18px;
+    box-shadow:var(--shadow);
+}
+
 input,
 textarea{
     width:100%;
@@ -70,12 +114,13 @@ textarea{
     background:#ffffff;
 }
 
-.products-grid,.product-grid{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
-gap:20px;
-padding:20px;
-align-items:stretch;
+.products-grid,
+.product-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+    gap:20px;
+    padding:20px;
+    align-items:stretch;
 }
 
 .product-card{
@@ -87,100 +132,80 @@ align-items:stretch;
     flex-direction:column;
     height:100%;
     transition:.3s;
+    border:1px solid #edf2f7;
 }
 
 .product-card:hover{
     transform:translateY(-5px);
+    box-shadow:0 12px 35px rgba(0,0,0,.12);
 }
 
 .product-card img{
-width:100%;
-height:240px;
-object-fit:cover;
-display:block;
-background:#eef6ff;
+    width:100%;
+    height:240px;
+    object-fit:cover;
+    display:block;
+    background:#eef6ff;
 }
+
 .product-content{
-padding:15px;
-display:flex;
-flex-direction:column;
-gap:10px;
-flex:1;
+    padding:15px;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    flex:1;
+}
+
+.product-content h3{
+    color:#111827;
+    margin:0;
 }
 
 .price{
-    color:#0f4cbd;
+    color:var(--primary);
     font-size:20px;
     font-weight:700;
 }
 
-.search-box{padding:20px}
+.search-box{
+    padding:20px;
+}
+
 footer{
     text-align:center;
     padding:25px;
     background:#ffffff;
-    border-top:1px solid #e5e7eb;
+    border-top:1px solid var(--border);
     margin-top:30px;
 }
 
-
-html,body{
-max-width:100%;
-overflow-x:hidden;
-}
-
 img{
-max-width:100%;
-height:auto;
-}
-
-.hero img{
-width:100%;
-max-width:1200px;
-display:block;
-margin:0 auto;
-object-fit:contain;
-}
-
-header{
-flex-wrap:wrap;
-text-align:center;
-}
-
-.logo{
-    color:#0f4cbd;
-    font-size:24px;
-    font-weight:700;
-}
-
-header nav{
-    margin-left:auto;
-}
-
-header nav a{
-    margin-left:20px;
+    max-width:100%;
+    height:auto;
 }
 
 @media (max-width:768px){
-header h2{font-size:18px;}
-nav{justify-content:center;}
-.product-card img{height:180px;}
-.hero{padding:20px 10px;}
-}
-header{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    padding:18px 30px;
-    background:#ffffff;
-    box-shadow:0 2px 10px rgba(0,0,0,.05);
-}
+    header h2{
+        font-size:18px;
+    }
 
-/* Revisi ukuran banner */
-.hero img{
-    width:auto !important;
-    max-width:90% !important;
-    max-height:260px !important;
-    object-fit:contain;
-    margin:0 auto;
+    nav{
+        justify-content:center;
+    }
+
+    .product-card img{
+        height:180px;
+    }
+
+    .hero{
+        padding:20px 10px;
+    }
+
+    header{
+        padding:15px 20px;
+    }
+
+    .logo{
+        font-size:20px;
+    }
 }
