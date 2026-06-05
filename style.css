@@ -155,9 +155,3 @@ nav{justify-content:center;}
     object-fit:contain;
     margin:0 auto;
 }
-
-@media (max-width:768px){
-    .hero img{
-        max-height:180px !important;
-    }
-}
