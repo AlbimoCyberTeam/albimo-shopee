@@ -29,7 +29,7 @@ font-weight:600;
 .hero{
 text-align:center;
 padding:60px 20px;
-background:linear-gradient(135deg,var(--primary),#7ec8ff);
+background:linear-gradient(135deg,var(--primary),#ffffff);
 color:#000;
 }
 button{
