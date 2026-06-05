@@ -54,7 +54,9 @@ checkRole('admin', 'admin-login.html');
 
 async function uploadProduct(){
 const name = document.getElementById('productName').value;
-const price = document.getElementById('productPrice').value;
+const price = parseInt(
+    document.getElementById('productPrice').value.replace(/\D/g, '')
+) || 0;
 const file = document.getElementById('productImage').files[0];
 const description = document.getElementById('productDesc').value;
 
@@ -80,11 +82,11 @@ body:fd
 const data = await res.json();
 
 db.ref('products').push({
-name,
-price,
-image:data.secure_url,
-description,
-createdAt:Date.now()
+    name,
+    price: Number(price),
+    image: data.secure_url,
+    description,
+    createdAt: Date.now()
 });
 
 alert('Produk berhasil ditambahkan');
