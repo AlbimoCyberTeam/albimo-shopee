@@ -23,7 +23,7 @@
 
 <section class="hero">
 <center>
-  <img src="https://h.top4top.io/p_3801qj5bz0.png" width="100">
+  <img src="https://h.top4top.io/p_3801qj5bz0.png" width="150">
 </center>
 <p>Wellcome To Albimo Store</p>
 </section>
@@ -58,7 +58,7 @@ list.innerHTML += `
 <p>${product.description || ''}</p>
 
 <button onclick="addCart('${product.name}','${product.price}','${product.image}')">
-Tambah 🛒Keranjang
+Tambah Keranjang
 </button>
 
 </div>
@@ -72,7 +72,7 @@ function addCart(name,price,image){
 const cart = JSON.parse(localStorage.getItem('cart') || '[]');
 cart.push({name,price,image});
 localStorage.setItem('cart', JSON.stringify(cart));
-alert('Produk berhasil ditambahkan ke 🛒keranjang');
+alert('Produk berhasil ditambahkan ke keranjang');
 }
 
 function searchProducts(){

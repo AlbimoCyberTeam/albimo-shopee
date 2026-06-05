@@ -24,7 +24,7 @@ productList.innerHTML += `
 '${product.price}',
 '${product.image}'
 )">
-Tambah 🛒Keranjang
+Tambah Keranjang
 </button>
 
 </div>
@@ -48,6 +48,6 @@ image
 
 localStorage.setItem("cart", JSON.stringify(cart));
 
-alert("Produk masuk 🛒keranjang");
+alert("Produk masuk keranjang");
 
 }
