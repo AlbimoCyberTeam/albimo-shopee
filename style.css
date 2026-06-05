@@ -2,7 +2,7 @@
 :root{
 --primary:#1e90ff;
 --primary-dark:#0b6fd6;
---bg:#ffffff;
+--bg:#2962ff;
 --black:#000000;
 --text:#000000;
 }
@@ -159,7 +159,7 @@ nav{justify-content:center;}
 
 /* Perubahan sesuai screenshot */
 .hero{
-    background:#2962ff !important;
+    background:#ffffff !important;
     color:#000 !important;
 }
 
