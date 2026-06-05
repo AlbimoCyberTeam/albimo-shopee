@@ -1,7 +1,8 @@
 :root{
 --primary:#00d2ff;
 --primary-dark:#00b8e6;
---bg:#ffffff;
+--bg:#ffffff; /* Mengubah background utama body menjadi putih */
+--header-bg:#1e90ff; /* Mempertahankan warna biru khusus untuk area logo/header */
 --black:#000000;
 --text:#333333;
 }
@@ -14,9 +15,11 @@ color:var(--text);
 }
 header{
     display:flex;
-    justify-content:space-between;
+    justify-content:center; /* Membuat logo Albimo Store otomatis berada di tengah */
     align-items:center;
     padding:15px 25px;
+    background:var(--header-bg); /* Menerapkan warna biru khusus hanya di bagian atas */
+    width:100%;
 }
 nav{display:flex;flex-wrap:wrap;gap:10px}
 nav a{
@@ -44,7 +47,7 @@ transition:.2s;
 button:hover{background:var(--primary-dark)}
 .auth-box,.card{
 max-width:500px;
-margin:30px auto;
+margin:60px auto; /* Menambah jarak atas/bawah agar kotak login terlihat lebih rapi */
 background:#ffffff;
 padding:20px;
 border-radius:14px;
