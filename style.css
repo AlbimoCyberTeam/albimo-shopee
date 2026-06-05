@@ -2,7 +2,7 @@
 :root{
 --primary:#1e90ff;
 --primary-dark:#0b6fd6;
---bg:#f4f9ff;
+--bg:#eef2f5;
 --black:#000000;
 --text:#000000;
 }
@@ -46,7 +46,7 @@ button:hover{background:var(--primary-dark)}
 .auth-box,.card{
 max-width:500px;
 margin:30px auto;
-background:#1a237e;
+background:#ffffff;
 padding:20px;
 border-radius:14px;
 box-shadow:0 4px 15px rgba(0,0,0,.08);
@@ -155,3 +155,22 @@ nav{justify-content:center;}
     object-fit:contain;
     margin:0 auto;
 }
+
+
+/* Perubahan sesuai screenshot */
+.hero{
+    background:#eef2f5 !important;
+    color:#000 !important;
+}
+
+.auth-box,
+.card{
+    background:#ffffff !important;
+    color:#000 !important;
+    border:1px solid #e5e7eb;
+}
+
+input, textarea{
+    background:#ffffff;
+}
+
