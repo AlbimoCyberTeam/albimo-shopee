@@ -2,9 +2,9 @@
 :root{
 --primary:#d50000;
 --primary-dark:#ffffff;
---bg:#2962ff;
+--bg:#ffffff;
 --white:#ffffff;
---text:#000000;
+--text:#ffffff;
 }
 *{box-sizing:border-box}
 body{
@@ -55,7 +55,7 @@ input,textarea{
 width:100%;
 padding:12px;
 margin:10px 0;
-border:1px solid #ffcdd2;
+border:1px solid #90caf9;
 border-radius:8px;
 }
 .products-grid,.product-grid{
