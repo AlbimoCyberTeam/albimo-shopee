@@ -66,15 +66,25 @@ container.innerHTML += `
 <img src="${item.image}">
 <div class="product-content">
 <h3>${item.name}</h3>
-<p>Rp ${Number(item.price).toLocaleString('id-ID')}</p>
+<p>
+${new Intl.NumberFormat('id-ID',{
+    style:'currency',
+    currency:'IDR',
+    minimumFractionDigits:0
+}).format(Number(item.price))}
+</p>
 <button onclick="removeItem(${index})">Hapus</button>
 </div>
 </div>
 `;
 });
 
-document.getElementById('totalPrice').innerText = 'Rp ' + total.toLocaleString('id-ID');
-}
+document.getElementById('totalPrice').innerText =
+new Intl.NumberFormat('id-ID',{
+    style:'currency',
+    currency:'IDR',
+    minimumFractionDigits:0
+}).format(total);
 
 function removeItem(index){
 cart.splice(index,1);
