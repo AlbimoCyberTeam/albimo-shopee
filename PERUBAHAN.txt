@@ -1,0 +1,1 @@
+Ganti nomor rekening dan QR sesuai kebutuhan. Harga Rp95 berasal dari data produk di Firebase, ubah menjadi 95000 pada database/admin.

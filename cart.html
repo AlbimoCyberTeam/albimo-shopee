@@ -28,6 +28,17 @@
 <textarea id="customerAddress" placeholder="Alamat Lengkap"></textarea>
 
 <button onclick="checkout()">Checkout Sekarang</button>
+
+</div>
+
+<div class="card" id="paymentBox" style="display:none">
+<h2>Pembayaran Transfer</h2>
+<p><b>Bank BCA</b></p>
+<p>No Rekening: 1234567890</p>
+<p>Atas Nama: ALBIMO STORE</p>
+<img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=ALBIMO-STORE-PAYMENT" style="max-width:250px;width:100%">
+<input type="file" id="transferProof" accept="image/*">
+<p>Silakan upload bukti transfer lalu kirim ke admin.</p>
 </div>
 
 <script src="firebase.js"></script>
@@ -110,7 +121,8 @@ const orderId = db.ref('orders').push().key;
 
 db.ref('orders/' + orderId).set(orderData)
 .then(()=>{
-alert('Checkout berhasil dan pesanan masuk ke admin');
+document.getElementById('paymentBox').style.display='block';
+alert('Pesanan dibuat. Silakan transfer dan upload bukti pembayaran.');
 localStorage.removeItem('cart');
 window.location.reload();
 })
