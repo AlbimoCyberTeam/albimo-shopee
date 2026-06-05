@@ -1,12 +1,12 @@
 :root{
-    --primary:#0f4cbd;
-    --primary-dark:#0a3691;
-    --secondary:#2da9ff;
-    --bg:#f8fafc;
+    --primary:#1b4f8c;
+    --primary-dark:#12365f;
+    --secondary:#4f8fc7;
+    --bg:#eef3f8;
     --card:#ffffff;
     --text:#1f2937;
-    --border:#e5e7eb;
-    --shadow:0 8px 25px rgba(0,0,0,.08);
+    --border:#dbe4ee;
+    --shadow:0 8px 25px rgba(27,79,140,.12);
 }
 
 *{
@@ -65,7 +65,7 @@ nav a:hover{
 .hero{
     text-align:center;
     padding:60px 20px;
-    background:linear-gradient(135deg,#2da9ff,#1d7df2,#0f4cbd);
+    background:linear-gradient(135deg,#4f8fc7,#1b4f8c,#12365f);
     color:#ffffff;
 }
 
@@ -208,30 +208,4 @@ img{
     .logo{
         font-size:20px;
     }
-
-    .login-header{
-    background:linear-gradient(
-    135deg,
-    #3b82f6,
-    #2563eb,
-    #1e3a8a
-    );
-
-    padding:40px 20px;
-    text-align:center;
-    border-radius:0 0 25px 25px;
-    box-shadow:0 8px 20px rgba(15,76,189,.25);
-}
-
-.login-header h1,
-.login-header h2,
-.login-header p{
-    color:#ffffff;
-}
-
-.login-header img{
-    width:140px;
-    height:auto;
-    margin-bottom:15px;
-}
 }
