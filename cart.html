@@ -57,34 +57,23 @@ total = 0;
 if(cart.length === 0){
 container.innerHTML = '<div class="card"><h3>Keranjang masih kosong</h3></div>';
 }
-cart.forEach((item,index)=>{
 
-total += Number(item.price || 0);
+cart.forEach((item,index)=>{
+total += Number(item.price);
 
 container.innerHTML += `
 <div class="product-card">
-
-<img
-src="${item.image || 'assets/AlbimoLogo.png'}"
-class="product-image"
-onerror="this.src='assets/AlbimoLogo.png'">
-
+<img src="${item.image}">
 <div class="product-content">
-
-<h3>${item.name || 'Produk'}</h3>
-
+<h3>${item.name}</h3>
 <p>
 ${new Intl.NumberFormat('id-ID',{
-style:'currency',
-currency:'IDR',
-minimumFractionDigits:0
-}).format(Number(item.price || 0))}
+    style:'currency',
+    currency:'IDR',
+    minimumFractionDigits:0
+}).format(Number(item.price))}
 </p>
-
-<button onclick="removeItem(${index})">
-Hapus
-</button>
-
+<button onclick="removeItem(${index})">Hapus</button>
 </div>
 </div>
 `;
@@ -97,9 +86,11 @@ new Intl.NumberFormat('id-ID',{
     minimumFractionDigits:0
 }).format(total);
 
-} // <-- tutup renderCart() di sini
-
 function removeItem(index){
+cart.splice(index,1);
+localStorage.setItem('cart', JSON.stringify(cart));
+renderCart();
+}
 
 function checkout(){
 if(cart.length === 0){
@@ -149,7 +140,7 @@ window.location.reload();
 alert('Checkout gagal: ' + error.message);
 });
 }
-console.log(cart);
+
 renderCart();
 </script>
 </body>
