@@ -1,6 +1,6 @@
 
 :root{
---primary:#1a237e;
+--primary:#d50000;
 --primary-dark:#ffffff;
 --bg:#2962ff;
 --white:#ffffff;
@@ -29,12 +29,12 @@ font-weight:600;
 .hero{
 text-align:center;
 padding:60px 20px;
-background:linear-gradient(135deg,var(--primary),#1a237e);
-color:#000;
+background:linear-gradient(135deg,var(--primary),#ffffff);
+color:#fff;
 }
 button{
 background:var(--primary);
-color:#000;
+color:#fff;
 border:none;
 padding:12px 18px;
 border-radius:8px;
@@ -46,7 +46,7 @@ button:hover{background:var(--primary-dark)}
 .auth-box,.card{
 max-width:500px;
 margin:30px auto;
-background:#304ffe;
+background:#ffffff;
 padding:20px;
 border-radius:14px;
 box-shadow:0 4px 15px rgba(0,0,0,.08);
@@ -55,7 +55,7 @@ input,textarea{
 width:100%;
 padding:12px;
 margin:10px 0;
-border:1px solid #cfe4ff;
+border:1px solid #ffcdd2;
 border-radius:8px;
 }
 .products-grid,.product-grid{
