@@ -16,7 +16,7 @@ productList.innerHTML += `
 
 <h3>${product.name}</h3>
 
-<p>Rp ${product.price}</p>
+<p>Rp ${Number(product.price).toLocaleString('id-ID')}</p>
 
 <button onclick="addToCart(
 '${child.key}',
