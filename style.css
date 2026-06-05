@@ -106,39 +106,3 @@ padding:20px;
 background:#fff;
 margin-top:20px;
 }
-
-
-html,body{
-max-width:100%;
-overflow-x:hidden;
-}
-
-img{
-max-width:100%;
-height:auto;
-}
-
-.hero img{
-width:100%;
-max-width:1200px;
-display:block;
-margin:0 auto;
-object-fit:contain;
-}
-
-header{
-flex-wrap:wrap;
-text-align:center;
-}
-
-.logo img{
-max-width:70px;
-height:auto;
-}
-
-@media (max-width:768px){
-header h2{font-size:18px;}
-nav{justify-content:center;}
-.product-card img{height:180px;}
-.hero{padding:20px 10px;}
-}
