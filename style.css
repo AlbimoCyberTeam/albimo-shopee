@@ -46,7 +46,7 @@ button:hover{background:var(--primary-dark)}
 .auth-box,.card{
 max-width:500px;
 margin:30px auto;
-background:#fff;
+background:#1a237e;
 padding:20px;
 border-radius:14px;
 box-shadow:0 4px 15px rgba(0,0,0,.08);
