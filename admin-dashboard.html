@@ -63,33 +63,28 @@ alert('Semua data wajib diisi');
 return;
 }
 
-/* GANTI DENGAN DATA CLOUDINARY ANDA */
-const CLOUD_NAME = 'YOUR_CLOUD_NAME';
-const UPLOAD_PRESET = 'YOUR_UPLOAD_PRESET';
+/* GANTI DENGAN CLOUDINARY MILIK ANDA */
+const CLOUD_NAME='YOUR_CLOUD_NAME';
+const UPLOAD_PRESET='YOUR_UPLOAD_PRESET';
 
-const formData = new FormData();
-formData.append('file', file);
-formData.append('upload_preset', UPLOAD_PRESET);
-
-const uploadBtn = event.target;
-if(uploadBtn) uploadBtn.disabled = true;
+const fd = new FormData();
+fd.append('file', file);
+fd.append('upload_preset', UPLOAD_PRESET);
 
 try{
-const response = await fetch(
-`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,
-{
+const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,{
 method:'POST',
-body:formData
+body:fd
 });
 
-const result = await response.json();
+const data = await res.json();
 
 db.ref('products').push({
 name,
 price,
-image: result.secure_url,
+image:data.secure_url,
 description,
-createdAt: Date.now()
+createdAt:Date.now()
 });
 
 alert('Produk berhasil ditambahkan');
@@ -99,11 +94,9 @@ document.getElementById('productPrice').value='';
 document.getElementById('productImage').value='';
 document.getElementById('productDesc').value='';
 
-}catch(err){
-console.error(err);
-alert('Upload gambar gagal');
-}finally{
-if(uploadBtn) uploadBtn.disabled = false;
+}catch(e){
+alert('Upload Cloudinary gagal');
+console.error(e);
 }
 }
 
