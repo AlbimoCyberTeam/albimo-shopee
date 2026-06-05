@@ -12,7 +12,7 @@
 .order-box{background:#fff;padding:20px;border-radius:16px;margin:20px;box-shadow:0 5px 20px rgba(0,0,0,.08)}
 .order-item{padding:10px 0;border-bottom:1px solid #ddd}
 .status-badge{display:inline-block;padding:6px 12px;border-radius:30px;background:#111;color:#fff;font-size:12px;margin-top:10px}
-.select-status{padding:10px;border-radius:10px;margin-top:10px;width:100%}.delete-order-btn{background:#dc3545;color:#fff;border:none;padding:10px 14px;border-radius:8px;margin-top:10px;cursor:pointer}
+.select-status{padding:10px;border-radius:10px;margin-top:10px;width:100%}
 </style>
 </head>
 <body>
@@ -64,8 +64,8 @@ return;
 }
 
 /* GANTI DENGAN CLOUDINARY MILIK ANDA */
-const CLOUD_NAME='diutiwqz1';
-const UPLOAD_PRESET='albimostore';
+const CLOUD_NAME='YOUR_CLOUD_NAME';
+const UPLOAD_PRESET='YOUR_UPLOAD_PRESET';
 
 const fd = new FormData();
 fd.append('file', file);
@@ -168,19 +168,10 @@ ${itemsHtml}
 <option value="Dikirim" ${order.status === 'Dikirim' ? 'selected' : ''}>Dikirim</option>
 <option value="Selesai" ${order.status === 'Selesai' ? 'selected' : ''}>Selesai</option>
 </select>
-<button class="delete-order-btn" onclick="deleteOrder('${child.key}')">🗑 Hapus Checkout</button>
 </div>
 `;
 });
 });
-}
-
-
-function deleteOrder(orderId){
-if(confirm('Yakin ingin menghapus data checkout ini?')){
-db.ref('orders/' + orderId).remove()
-.then(()=>alert('Checkout berhasil dihapus'));
-}
 }
 
 function updateOrderStatus(orderId, status){
