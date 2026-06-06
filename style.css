@@ -1,9 +1,9 @@
 :root{
---primary:#1e90ff;
---primary-dark:#0b6fd6;
+--primary:#bbdefb;
+--primary-dark:#304ffe;
 --bg:#f4f9ff;
---black:#000000;
---text:#000000;
+--white:#ffffff;
+--text:#ffffff;
 }
 *{box-sizing:border-box}
 body{
@@ -45,7 +45,7 @@ button:hover{background:var(--primary-dark)}
 .auth-box,.card{
 max-width:500px;
 margin:30px auto;
-background:#1a237e;
+background:#304ffe;
 padding:20px;
 border-radius:14px;
 box-shadow:0 4px 15px rgba(0,0,0,.08);
@@ -148,9 +148,9 @@ nav{justify-content:center;}
 
 /* Revisi ukuran banner */
 .hero img{
-    width:auto !important;
-    max-width:450% !important;
-    max-height:250px !important;
+    width:auto;
+    width:450px;
+    height:250px;
     object-fit:contain;
     margin:0 auto;
 }
