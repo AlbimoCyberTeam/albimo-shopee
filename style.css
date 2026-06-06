@@ -149,8 +149,8 @@ nav{justify-content:center;}
 /* Revisi ukuran banner */
 .hero img{
     width:auto !important;
-    max-width:90% !important;
-    max-height:260px !important;
+    max-width:100% !important;
+    max-height:250px !important;
     object-fit:contain;
     margin:0 auto;
 }
