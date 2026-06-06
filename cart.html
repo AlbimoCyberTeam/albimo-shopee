@@ -29,26 +29,6 @@
 
 <button onclick="checkout()">Checkout Sekarang</button>
 
-</div>
-
-<div class="payment-box" id="paymentBox">
-<h2>Pembayaran</h2>
-<p><strong>Transfer Bank:</strong></p>
-<ul>
-<li>Bank BNI : 2038992622</li>
-<li>Bank BRI : 497301014325530</li>
-<li>DANA : 082199326022</li>
-</ul>
-
-<div class="qr-box">
-<h3>QRIS Pembayaran</h3>
-<img src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=ALBIMO-STORE" style="max-width:220px;border-radius:12px;">
-<input type="file" id="transferProof" accept="image/*">
-<button onclick="uploadProof()">Upload Bukti Transfer</button><p>Silakan upload bukti transfer setelah melakukan pembayaran.</p>
-</div>
-</body>
-</html>
-
 <script src="firebase.js"></script>
 <script src="auth.js"></script>
 <script>
@@ -80,6 +60,21 @@ function checkout(){
  const customerName=document.getElementById('customerName').value.trim();
  const customerPhone=document.getElementById('customerPhone').value.trim();
  const customerAddress=document.getElementById('customerAddress').value.trim();
+ <div class="payment-box" id="paymentBox">
+ <h2>Pembayaran</h2>
+ <p><strong>Transfer Bank:</strong></p>
+ <ul>
+ <li>Bank BNI : 2038992622</li>
+ <li>Bank BRI : 497301014325530</li>
+ <li>DANA : 082199326022</li>
+ </ul>
+
+ <div class="qr-box">
+ <h3>QRIS Pembayaran</h3>
+ <img src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=ALBIMO-STORE" style="max-width:220px;border-radius:12px;">
+ <input type="file" id="transferProof" accept="image/*">
+ <button onclick="uploadProof()">Upload Bukti Transfer</button><p>Silakan upload bukti transfer setelah melakukan pembayaran.</p>
+ </div>
  if(!customerName||!customerPhone||!customerAddress) return alert('Nama, nomor HP dan alamat wajib diisi');
  const orderId=db.ref('orders').push().key;
  db.ref('orders/'+orderId).set({userId:user.uid,userEmail:user.email,customerName,customerPhone,customerAddress,items:cart,total,status:'Menunggu Pembayaran',checkoutAt:Date.now()}).then(()=>{
