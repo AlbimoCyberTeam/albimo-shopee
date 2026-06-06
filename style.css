@@ -135,7 +135,7 @@ nav{justify-content:center;}
 /* Revisi ukuran banner */
 .hero{
 text-align:center;
-padding:150px 150px;
+padding:80px 60px;
 background:linear-gradient(135deg,#e0e0e0,#bbdefb);
 color:#fff;
 min-height:150vh;
@@ -151,7 +151,7 @@ object-fit:cover;
 border-radius:20px;
 background:#fff;
 padding:10px;
-box-shadow:0 10px 30px rgba(0,0,0,.25);
+box-shadow:0 10px 10px rgba(0,0,0,.25);
 margin-bottom:5px;
 }
 .hero h1{
@@ -160,9 +160,9 @@ margin:0 0 10px;
 }
 .hero p{
 font-size:20px;
-width:auto;
+max-width:100%;
 height:auto;
-margin-bottom:25px;
+margin-bottom:10px;
 }
 
 .auth-box,
