@@ -34,6 +34,9 @@
 </div>
 
 <div class="products-grid" id="productList"></div>
+<h2 style="padding:20px;">Riwayat Pesanan Saya</h2>
+<div id="myOrders" style="padding:20px"></div>
+
 
 <script src="firebase.js"></script>
 <script src="auth.js"></script>
@@ -87,7 +90,25 @@ card.style.display = card.innerText.toLowerCase().includes(input)
 });
 }
 
+
+function loadMyOrders(){
+auth.onAuthStateChanged(function(user){
+ if(!user) return;
+ db.ref('orders').on('value',function(s){
+   let html='';
+   s.forEach(function(ch){
+     const o=ch.val()||{};
+     if(o.userId===user.uid){
+       html += `<div class="product-card"><div class="product-content"><h3>Order #${ch.key}</h3><p>Status: ${o.status||'-'}</p><p>Total: Rp ${Number(o.total||0).toLocaleString('id-ID')}</p></div></div>`;
+     }
+   });
+   document.getElementById('myOrders').innerHTML=html||'Belum ada pesanan';
+ });
+});
+}
 loadProducts();
+loadMyOrders();
+
 </script>
 
 </body>

@@ -90,19 +90,37 @@ function checkout(){
  }).catch(e=>alert('Checkout gagal: '+e.message));
 }
 
-function uploadProof(){
+async function uploadProof(){
  if(!pendingOrderId) return alert('Silakan checkout terlebih dahulu.');
  const file=document.getElementById('transferProof').files[0];
  if(!file) return alert('Pilih bukti transfer terlebih dahulu.');
- const reader=new FileReader();
- reader.onload=()=>{
-   db.ref('orders/'+pendingOrderId).update({paymentProof:reader.result,paymentStatus:'Bukti Transfer Diupload',uploadedAt:Date.now()}).then(()=>{
-     alert('Bukti transfer berhasil diupload.');
-     localStorage.removeItem('cart');
-     renderCart();
+
+ const CLOUD_NAME='diutiwqz1';
+ const UPLOAD_PRESET='albimostore';
+
+ try{
+   const fd=new FormData();
+   fd.append('file',file);
+   fd.append('upload_preset',UPLOAD_PRESET);
+
+   const res=await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,{
+      method:'POST',
+      body:fd
    });
- };
- reader.readAsDataURL(file);
+   const data=await res.json();
+
+   await db.ref('orders/'+pendingOrderId).update({
+      paymentProof:data.secure_url,
+      paymentStatus:'Bukti Transfer Diupload',
+      uploadedAt:Date.now()
+   });
+
+   alert('Bukti transfer berhasil diupload ke Cloudinary.');
+   localStorage.removeItem('cart');
+   renderCart();
+ }catch(e){
+   alert('Upload bukti transfer gagal: '+e.message);
+ }
 }
 renderCart();
 </script>

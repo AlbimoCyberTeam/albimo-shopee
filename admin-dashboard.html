@@ -157,7 +157,7 @@ Harga: Rp ${Number(item.price).toLocaleString('id-ID')}
 container.innerHTML += `
 <div class="order-box">
 <h3>${order.customerName || '-'}</h3>
-<p><strong>Email User:</strong> ${order.userEmail}</p>
+<p><strong>User UID:</strong> ${order.userId || '-'}</p><p><strong>Email User:</strong> ${order.userEmail}</p>
 <p><strong>Nomor HP:</strong> ${order.customerPhone || '-'}</p>
 <p><strong>Alamat:</strong><br>${order.customerAddress || '-'}</p>
 <p><strong>Total:</strong> Rp ${Number(order.total).toLocaleString('id-ID')}</p>
@@ -165,6 +165,7 @@ container.innerHTML += `
 <div class="status-badge">${order.status}</div>
 <h4>Produk Checkout:</h4>
 ${itemsHtml}
+${renderTransferProof(order)}
 <select class="select-status" onchange="updateOrderStatus('${child.key}', this.value)">
 <option value="Menunggu Konfirmasi" ${order.status === 'Menunggu Konfirmasi' ? 'selected' : ''}>Menunggu Konfirmasi</option>
 <option value="Diproses" ${order.status === 'Diproses' ? 'selected' : ''}>Diproses</option>
@@ -187,22 +188,10 @@ loadOrders();
 </script>
 
 <script>
-auth.onAuthStateChanged(function(user){});
 function renderTransferProof(order){
- return order.transferProof ? '<div><p><b>Bukti Transfer:</b></p><img src="'+order.transferProof+'" style="max-width:300px;border:1px solid #ccc"></div>' : '<p>Belum upload bukti transfer</p>';
+ const img=order.paymentProof || order.transferProof;
+ return img ? '<div><p><b>Bukti Transfer:</b></p><img src="'+img+'" style="max-width:300px;border:1px solid #ccc;border-radius:8px"></div>' : '<p>Belum upload bukti transfer</p>';
 }
-setTimeout(function(){
- const c=document.getElementById('ordersContainer');
- if(c){
- db.ref('orders').on('value',function(s){
-  c.innerHTML='';
-  s.forEach(function(ch){
-   var o=ch.val()||{};
-   c.innerHTML += '<div class="order-box"><h3>Order '+ch.key+'</h3><p><b>User UID:</b> '+(o.userId||'-')+'</p>'+renderTransferProof(o)+'</div>';
-  });
- });
- }
-},1000);
 </script>
 </body>
 </html>
