@@ -38,11 +38,31 @@
 <button onclick="uploadProduct()">Upload Produk</button>
 </div>
 
+<input type="hidden" id="editProductId" value="">
+<button id="btnSubmitProduct" onclick="uploadProduct()">Upload Produk</button>
+<button id="btnCancelEdit" style="display:none; background:#aaa; margin-top:5px;" onclick="cancelEditProduct()">Batal Edit</button>
+</div>
+
 <h2 style="padding:20px;">Daftar Produk</h2>
 <div class="products-grid" id="productList"></div>
 
 <section id="ordersSection">
 <h2 style="padding:20px;">Data Checkout User</h2>
+<div id="ordersContainer"></div>
+</section>
+
+<!-- Filter Status Pesanan Baru -->
+<div class="filter-container">
+<label for="filterStatus"><b>Filter Status: </b></label>
+<select id="filterStatus" class="select-filter" onchange="loadOrders()">
+<option value="Semua">Semua Pesanan</option>
+<option value="Menunggu Konfirmasi">Menunggu Konfirmasi</option>
+<option value="Diproses">Diproses</option>
+<option value="Dikirim">Dikirim</option>
+<option value="Selesai">Selesai</option>
+</select>
+</div>
+
 <div id="ordersContainer"></div>
 </section>
 
@@ -55,52 +75,94 @@ auth.onAuthStateChanged(function(user){if(user){document.getElementById('adminIn
 
 async function uploadProduct(){
 const name = document.getElementById('productName').value;
-const price = parseInt(
-    document.getElementById('productPrice').value.replace(/\D/g, '')
-) || 0;
-const file = document.getElementById('productImage').files[0];
+const price = parseInt(document.getElementById('productPrice').value.replace(/\D/g, '')) || 0;
+const fileInput = document.getElementById('productImage');
+const file = fileInput.files[0];
 const description = document.getElementById('productDesc').value;
+const editId = document.getElementById('editProductId').value;
 
-if(!name || !price || !file){
-alert('Semua data wajib diisi');
+if(!name || !price){
+alert('Nama dan harga wajib diisi');
 return;
 }
 
-/* GANTI DENGAN CLOUDINARY MILIK ANDA */
-const CLOUD_NAME='diutiwqz1';
-const UPLOAD_PRESET='albimostore';
+let imageUrl = "";
+if(editId) {
+    // Jika sedang edit, ambil url gambar lama terlebih dahulu jika tidak upload gambar baru
+    const oldSnap = await db.ref('products/' + editId).get();
+    if(oldSnap.exists()) imageUrl = oldSnap.val().image;
+}
 
-const fd = new FormData();
-fd.append('file', file);
-fd.append('upload_preset', UPLOAD_PRESET);
+if(file){
+    /* GANTI DENGAN CLOUDINARY MILIK ANDA */
+    const CLOUD_NAME='diutiwqz1';
+    const UPLOAD_PRESET='albimostore';
 
-try{
-const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,{
-method:'POST',
-body:fd
-});
+    const fd = new FormData();
+    fd.append('file', file);
+    fd.append('upload_preset', UPLOAD_PRESET);
 
-const data = await res.json();
+    try{
+    const res = await fetch(`https://cloudinary.com{CLOUD_NAME}/image/upload`,{
+    method:'POST',
+    body:fd
+    });
+    const data = await res.json();
+    imageUrl = data.secure_url;
+    }catch(e){
+    alert('Upload Cloudinary gagal');
+    console.error(e);
+    return;
+    }
+} else if(!editId && !file) {
+    alert('File gambar wajib diisi untuk produk baru');
+    return;
+}
 
-db.ref('products').push({
+const productData = {
     name,
     price: Number(price),
-    image: data.secure_url,
+    image: imageUrl,
     description,
-    createdAt: Date.now()
-});
+    updatedAt: Date.now()
+};
 
-alert('Produk berhasil ditambahkan');
+if(editId){
+    db.ref('products/' + editId).update(productData);
+    alert('Produk berhasil diperbarui');
+    cancelEditProduct();
+} else {
+    productData.createdAt = Date.now();
+    db.ref('products').push(productData);
+    alert('Produk berhasil ditambahkan');
+    resetProductForm();
+}
+}
 
+function resetProductForm(){
 document.getElementById('productName').value='';
 document.getElementById('productPrice').value='';
 document.getElementById('productImage').value='';
 document.getElementById('productDesc').value='';
-
-}catch(e){
-alert('Upload Cloudinary gagal');
-console.error(e);
+document.getElementById('editProductId').value='';
+document.getElementById('formTitle').innerText='Tambah Produk';
+document.getElementById('btnSubmitProduct').innerText='Upload Produk';
+document.getElementById('btnCancelEdit').style.display='none';
 }
+
+function editProduct(id, name, price, description){
+document.getElementById('productName').value = name;
+document.getElementById('productPrice').value = price;
+document.getElementById('productDesc').value = description;
+document.getElementById('editProductId').value = id;
+document.getElementById('formTitle').innerText = 'Edit Produk';
+document.getElementById('btnSubmitProduct').innerText = 'Simpan Perubahan';
+document.getElementById('btnCancelEdit').style.display = 'inline-block';
+window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+function cancelEditProduct(){
+resetProductForm();
 }
 
 function loadProducts(){
@@ -119,6 +181,7 @@ list.innerHTML += `
 <h3>${data.name}</h3>
 <p>Rp ${Number(data.price).toLocaleString('id-ID')}</p>
 <p>${data.description || ''}</p>
+<button class="btn-edit-product" onclick="editProduct('${child.key}', '${data.name.replace(/'/g, "\\'")}', ${data.price}, '${(data.description || '').replace(/'/g, "\\'")}')">Edit</button>
 <button onclick="deleteProduct('${child.key}')">Hapus Produk</button>
 </div>
 </div>
@@ -136,7 +199,9 @@ alert('Produk dihapus');
 
 function loadOrders(){
 const container = document.getElementById('ordersContainer');
+const filterValue = document.getElementById('filterStatus').value;
 
+db.ref('orders').off(); // bersihkan listener sebelumnya
 db.ref('orders').on('value', (snapshot)=>{
 container.innerHTML = '';
 
@@ -145,8 +210,17 @@ container.innerHTML = '<div class="order-box"><h3>Belum ada checkout user</h3></
 return;
 }
 
+let hasOrders = false;
+
 snapshot.forEach((child)=>{
 const order = child.val();
+
+// Logika penyaringan status
+if(filterValue !== "Semua" && order.status !== filterValue){
+    return;
+}
+
+hasOrders = true;
 const itemsHtml = order.items.map(item => `
 <div class="order-item">
 <strong>${item.name}</strong><br>
@@ -172,9 +246,14 @@ ${renderTransferProof(order)}
 <option value="Dikirim" ${order.status === 'Dikirim' ? 'selected' : ''}>Dikirim</option>
 <option value="Selesai" ${order.status === 'Selesai' ? 'selected' : ''}>Selesai</option>
 </select>
+<button class="btn-delete-order" onclick="deleteOrder('${child.key}')">Hapus Pesanan</button>
 </div>
 `;
 });
+
+if(!hasOrders){
+container.innerHTML = '<div class="order-box"><h3>Tidak ada pesanan dengan status ini</h3></div>';
+}
 });
 }
 
@@ -183,11 +262,17 @@ db.ref('orders/' + orderId + '/status').set(status)
 .then(()=> alert('Status pesanan diperbarui'));
 }
 
+function deleteOrder(orderId){
+if(confirm('Yakin ingin menghapus data pesanan ini secara permanen?')){
+db.ref('orders/' + orderId).remove()
+.then(() => alert('Pesanan berhasil dihapus'))
+.catch((e) => alert('Gagal menghapus pesanan: ' + e.message));
+}
+}
+
 loadProducts();
 loadOrders();
-</script>
 
-<script>
 function renderTransferProof(order){
  const img=order.paymentProof || order.transferProof;
  return img ? '<div><p><b>Bukti Transfer:</b></p><img src="'+img+'" style="max-width:300px;border:1px solid #ccc;border-radius:8px"></div>' : '<p>Belum upload bukti transfer</p>';
