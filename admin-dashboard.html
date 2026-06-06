@@ -5,27 +5,20 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Dashboard Albimo Store</title>
 <link rel="stylesheet" href="style.css">
-<script src="https://gstatic.com"></script>
-<script src="https://gstatic.com"></script>
-<script src="https://gstatic.com"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 <style>
 .order-box{background:#fff;padding:20px;border-radius:16px;margin:20px;box-shadow:0 5px 20px rgba(0,0,0,.08)}
 .order-item{padding:10px 0;border-bottom:1px solid #ddd}
 .status-badge{display:inline-block;padding:6px 12px;border-radius:30px;background:#111;color:#fff;font-size:12px;margin-top:10px}
 .select-status{padding:10px;border-radius:10px;margin-top:10px;width:100%}
-.btn-delete-order{background:#ff4d4d;color:#fff;border:none;padding:10px 15px;border-radius:10px;cursor:pointer;font-weight:bold;margin-top:15px;width:100%;transition:background 0.2s}
-.btn-delete-order:hover{background:#cc0000}
-/* Gaya Baru untuk Fitur Filter dan Edit */
-.filter-container{padding:0 20px;margin-bottom:10px}
-.select-filter{padding:10px;border-radius:8px;width:250px;border:1px solid #ccc}
-.btn-edit-product{background:#ffa500;color:#fff;border:none;padding:8px 12px;border-radius:4px;cursor:pointer;font-weight:bold;margin-right:5px}
-.btn-edit-product:hover{background:#cc8400}
 </style>
 </head>
 <body>
 
 <center>
-  <img src="https://top4top.io" width="450">
+  <img src="https://b.top4top.io/p_3808aw9wu0.png" width="450">
 </center>
   
 <header>
@@ -36,17 +29,13 @@
 </nav>
 </header>
 
-<div id="adminInfo" style="padding:10px 20px;background:#f5f5f5;font-weight:bold"></div>
-
-<div class="card">
-<h2 id="formTitle">Tambah Produk</h2>
+<div id="adminInfo" style="padding:10px 20px;background:#f5f5f5;font-weight:bold"></div><div class="card">
+<h2>Tambah Produk</h2>
 <input type="text" id="productName" placeholder="Nama Produk">
 <input type="number" id="productPrice" placeholder="Harga Produk">
 <input type="file" id="productImage" accept="image/*">
 <textarea id="productDesc" placeholder="Deskripsi Produk"></textarea>
-<input type="hidden" id="editProductId" value="">
-<button id="btnSubmitProduct" onclick="uploadProduct()">Upload Produk</button>
-<button id="btnCancelEdit" style="display:none; background:#aaa; margin-top:5px;" onclick="cancelEditProduct()">Batal Edit</button>
+<button onclick="uploadProduct()">Upload Produk</button>
 </div>
 
 <h2 style="padding:20px;">Daftar Produk</h2>
@@ -54,19 +43,6 @@
 
 <section id="ordersSection">
 <h2 style="padding:20px;">Data Checkout User</h2>
-
-<!-- Filter Status Pesanan Baru -->
-<div class="filter-container">
-<label for="filterStatus"><b>Filter Status: </b></label>
-<select id="filterStatus" class="select-filter" onchange="loadOrders()">
-<option value="Semua">Semua Pesanan</option>
-<option value="Menunggu Konfirmasi">Menunggu Konfirmasi</option>
-<option value="Diproses">Diproses</option>
-<option value="Dikirim">Dikirim</option>
-<option value="Selesai">Selesai</option>
-</select>
-</div>
-
 <div id="ordersContainer"></div>
 </section>
 
@@ -79,94 +55,52 @@ auth.onAuthStateChanged(function(user){if(user){document.getElementById('adminIn
 
 async function uploadProduct(){
 const name = document.getElementById('productName').value;
-const price = parseInt(document.getElementById('productPrice').value.replace(/\D/g, '')) || 0;
-const fileInput = document.getElementById('productImage');
-const file = fileInput.files[0];
+const price = parseInt(
+    document.getElementById('productPrice').value.replace(/\D/g, '')
+) || 0;
+const file = document.getElementById('productImage').files[0];
 const description = document.getElementById('productDesc').value;
-const editId = document.getElementById('editProductId').value;
 
-if(!name || !price){
-alert('Nama dan harga wajib diisi');
+if(!name || !price || !file){
+alert('Semua data wajib diisi');
 return;
 }
 
-let imageUrl = "";
-if(editId) {
-    // Jika sedang edit, ambil url gambar lama terlebih dahulu jika tidak upload gambar baru
-    const oldSnap = await db.ref('products/' + editId).get();
-    if(oldSnap.exists()) imageUrl = oldSnap.val().image;
-}
+/* GANTI DENGAN CLOUDINARY MILIK ANDA */
+const CLOUD_NAME='diutiwqz1';
+const UPLOAD_PRESET='albimostore';
 
-if(file){
-    /* GANTI DENGAN CLOUDINARY MILIK ANDA */
-    const CLOUD_NAME='diutiwqz1';
-    const UPLOAD_PRESET='albimostore';
+const fd = new FormData();
+fd.append('file', file);
+fd.append('upload_preset', UPLOAD_PRESET);
 
-    const fd = new FormData();
-    fd.append('file', file);
-    fd.append('upload_preset', UPLOAD_PRESET);
+try{
+const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,{
+method:'POST',
+body:fd
+});
 
-    try{
-    const res = await fetch(`https://cloudinary.com{CLOUD_NAME}/image/upload`,{
-    method:'POST',
-    body:fd
-    });
-    const data = await res.json();
-    imageUrl = data.secure_url;
-    }catch(e){
-    alert('Upload Cloudinary gagal');
-    console.error(e);
-    return;
-    }
-} else if(!editId && !file) {
-    alert('File gambar wajib diisi untuk produk baru');
-    return;
-}
+const data = await res.json();
 
-const productData = {
+db.ref('products').push({
     name,
     price: Number(price),
-    image: imageUrl,
+    image: data.secure_url,
     description,
-    updatedAt: Date.now()
-};
+    createdAt: Date.now()
+});
 
-if(editId){
-    db.ref('products/' + editId).update(productData);
-    alert('Produk berhasil diperbarui');
-    cancelEditProduct();
-} else {
-    productData.createdAt = Date.now();
-    db.ref('products').push(productData);
-    alert('Produk berhasil ditambahkan');
-    resetProductForm();
-}
-}
+alert('Produk berhasil ditambahkan');
 
-function resetProductForm(){
 document.getElementById('productName').value='';
 document.getElementById('productPrice').value='';
 document.getElementById('productImage').value='';
 document.getElementById('productDesc').value='';
-document.getElementById('editProductId').value='';
-document.getElementById('formTitle').innerText='Tambah Produk';
-document.getElementById('btnSubmitProduct').innerText='Upload Produk';
-document.getElementById('btnCancelEdit').style.display='none';
-}
 
-function editProduct(id, name, price, description){
-document.getElementById('productName').value = name;
-document.getElementById('productPrice').value = price;
-document.getElementById('productDesc').value = description;
-document.getElementById('editProductId').value = id;
-document.getElementById('formTitle').innerText = 'Edit Produk';
-document.getElementById('btnSubmitProduct').innerText = 'Simpan Perubahan';
-document.getElementById('btnCancelEdit').style.display = 'inline-block';
-window.scrollTo({top: 0, behavior: 'smooth'});
+}catch(e){
+alert('Upload Cloudinary gagal');
+console.error(e);
 }
-
-function cancelEditProduct(){
-resetProductForm();
 }
 
 function loadProducts(){
@@ -185,7 +119,6 @@ list.innerHTML += `
 <h3>${data.name}</h3>
 <p>Rp ${Number(data.price).toLocaleString('id-ID')}</p>
 <p>${data.description || ''}</p>
-<button class="btn-edit-product" onclick="editProduct('${child.key}', '${data.name.replace(/'/g, "\\'")}', ${data.price}, '${(data.description || '').replace(/'/g, "\\'")}')">Edit</button>
 <button onclick="deleteProduct('${child.key}')">Hapus Produk</button>
 </div>
 </div>
@@ -203,9 +136,7 @@ alert('Produk dihapus');
 
 function loadOrders(){
 const container = document.getElementById('ordersContainer');
-const filterValue = document.getElementById('filterStatus').value;
 
-db.ref('orders').off(); // bersihkan listener sebelumnya
 db.ref('orders').on('value', (snapshot)=>{
 container.innerHTML = '';
 
@@ -214,17 +145,8 @@ container.innerHTML = '<div class="order-box"><h3>Belum ada checkout user</h3></
 return;
 }
 
-let hasOrders = false;
-
 snapshot.forEach((child)=>{
 const order = child.val();
-
-// Logika penyaringan status
-if(filterValue !== "Semua" && order.status !== filterValue){
-    return;
-}
-
-hasOrders = true;
 const itemsHtml = order.items.map(item => `
 <div class="order-item">
 <strong>${item.name}</strong><br>
@@ -250,28 +172,15 @@ ${renderTransferProof(order)}
 <option value="Dikirim" ${order.status === 'Dikirim' ? 'selected' : ''}>Dikirim</option>
 <option value="Selesai" ${order.status === 'Selesai' ? 'selected' : ''}>Selesai</option>
 </select>
-<button class="btn-delete-order" onclick="deleteOrder('${child.key}')">Hapus Pesanan</button>
 </div>
 `;
 });
-
-if(!hasOrders){
-container.innerHTML = '<div class="order-box"><h3>Tidak ada pesanan dengan status ini</h3></div>';
-}
 });
 }
 
 function updateOrderStatus(orderId, status){
 db.ref('orders/' + orderId + '/status').set(status)
 .then(()=> alert('Status pesanan diperbarui'));
-}
-
-function deleteOrder(orderId){
-if(confirm('Yakin ingin menghapus data pesanan ini secara permanen?')){
-db.ref('orders/' + orderId).remove()
-.then(() => alert('Pesanan berhasil dihapus'))
-.catch((e) => alert('Gagal menghapus pesanan: ' + e.message));
-}
 }
 
 loadProducts();
