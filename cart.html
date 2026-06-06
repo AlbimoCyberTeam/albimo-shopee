@@ -31,15 +31,23 @@
 
 </div>
 
-<div class="card" id="paymentBox" style="display:none">
-<h2>Pembayaran Transfer</h2>
-<p><b>Bank BNI</b></p>
-<p>No Rekening: 2038992622</p>
-<p>Atas Nama: HAMZA R RENYAAN</p>
-<img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=ALBIMO-STORE-PAYMENT" style="max-width:250px;width:100%">
+<div class="payment-box">
+<h2>Pembayaran</h2>
+<p><strong>Transfer Bank:</strong></p>
+<ul>
+<li>Bank BNI : 2038992622</li>
+<li>Bank BRI : 497301014325530</li>
+<li>DANA : 082199326022</li>
+</ul>
+
+<div class="qr-box">
+<h3>QRIS Pembayaran</h3>
+<img src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=ALBIMO-STORE" style="max-width:220px;border-radius:12px;">
 <input type="file" id="transferProof" accept="image/*">
 <p>Silakan upload bukti transfer lalu kirim ke admin.</p>
 </div>
+</body>
+</html>
 
 <script src="firebase.js"></script>
 <script src="auth.js"></script>
