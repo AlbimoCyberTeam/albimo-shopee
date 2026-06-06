@@ -136,7 +136,7 @@ nav{justify-content:center;}
 .hero{
 text-align:center;
 padding:80px 20px;
-background:linear-gradient(135deg,#ee4d2d,#ff7a59);
+background:linear-gradient(135deg,#e0e0e0,#bbdefb);
 color:#fff;
 min-height:80vh;
 display:flex;
@@ -145,10 +145,10 @@ justify-content:center;
 align-items:center;
 }
 .hero img{
-width:300px;
-height:150px;
+width:350px;
+height:250px;
 object-fit:cover;
-border-radius:10px;
+border-radius:20px;
 background:#fff;
 padding:10px;
 box-shadow:0 10px 30px rgba(0,0,0,.25);
