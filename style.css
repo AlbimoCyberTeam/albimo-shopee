@@ -150,19 +150,36 @@ nav{justify-content:center;}
 
 
 /* Revisi ukuran banner */
-.hero img{
-    width:auto !important;
-    max-width:90% !important;
-    max-height:260px !important;
-    object-fit:contain;
-    margin:0 auto;
-}
-
-
-/* Perubahan sesuai screenshot */
 .hero{
-    background:#ffffff !important;
-    color:#000 !important;
+text-align:center;
+padding:80px 20px;
+background:linear-gradient(135deg,#ee4d2d,#ff7a59);
+color:#fff;
+min-height:80vh;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+}
+.hero img{
+width:300px;
+height:150px;
+object-fit:cover;
+border-radius:24px;
+background:#fff;
+padding:10px;
+box-shadow:0 10px 30px rgba(0,0,0,.25);
+margin-bottom:20px;
+}
+.hero h1{
+font-size:42px;
+margin:0 0 10px;
+}
+.hero p{
+font-size:18px;
+max-width:700px;
+line-height:1.6;
+margin-bottom:25px;
 }
 
 .auth-box,
