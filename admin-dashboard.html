@@ -29,7 +29,7 @@
 </nav>
 </header>
 
-<div class="card">
+<div id="adminInfo" style="padding:10px 20px;background:#f5f5f5;font-weight:bold"></div><div class="card">
 <h2>Tambah Produk</h2>
 <input type="text" id="productName" placeholder="Nama Produk">
 <input type="number" id="productPrice" placeholder="Harga Produk">
@@ -51,6 +51,7 @@
 <script src="admin-seed.js"></script>
 <script>
 checkRole('admin', 'admin-login.html');
+auth.onAuthStateChanged(function(user){if(user){document.getElementById('adminInfo').innerHTML='ADMIN UID: '+user.uid+' | Email: '+(user.email||'');}});
 
 async function uploadProduct(){
 const name = document.getElementById('productName').value;
@@ -183,6 +184,25 @@ db.ref('orders/' + orderId + '/status').set(status)
 
 loadProducts();
 loadOrders();
+</script>
+
+<script>
+auth.onAuthStateChanged(function(user){});
+function renderTransferProof(order){
+ return order.transferProof ? '<div><p><b>Bukti Transfer:</b></p><img src="'+order.transferProof+'" style="max-width:300px;border:1px solid #ccc"></div>' : '<p>Belum upload bukti transfer</p>';
+}
+setTimeout(function(){
+ const c=document.getElementById('ordersContainer');
+ if(c){
+ db.ref('orders').on('value',function(s){
+  c.innerHTML='';
+  s.forEach(function(ch){
+   var o=ch.val()||{};
+   c.innerHTML += '<div class="order-box"><h3>Order '+ch.key+'</h3><p><b>User UID:</b> '+(o.userId||'-')+'</p>'+renderTransferProof(o)+'</div>';
+  });
+ });
+ }
+},1000);
 </script>
 </body>
 </html>

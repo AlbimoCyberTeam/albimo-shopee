@@ -21,6 +21,7 @@
 </nav>
 </header>
 
+<div id="userInfo" style="padding:10px 20px;background:#f5f5f5;font-weight:bold"></div>
 <section class="hero">
 <center>
   <img src="https://b.top4top.io/p_3808aw9wu0.png" width="450">
@@ -39,6 +40,7 @@
 
 <script>
 checkRole('user', 'login.html');
+auth.onAuthStateChanged(function(user){if(user){document.getElementById('userInfo').innerHTML='UID: '+user.uid+' | Email: '+(user.email||'');}});
 
 function loadProducts(){
 const list = document.getElementById('productList');
