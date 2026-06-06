@@ -1,9 +1,9 @@
 :root{
---primary:#bbdefb;
---primary-dark:#304ffe;
---bg:#f4f9ff;
---white:#ffffff;
---text:#ffffff;
+--primary:#1e90ff;
+--primary-dark:#0b6fd6;
+--bg:#eef2f5;
+--black:#000000;
+--text:#000000;
 }
 *{box-sizing:border-box}
 body{
@@ -45,7 +45,7 @@ button:hover{background:var(--primary-dark)}
 .auth-box,.card{
 max-width:500px;
 margin:30px auto;
-background:#304ffe;
+background:#ffffff;
 padding:20px;
 border-radius:14px;
 box-shadow:0 4px 15px rgba(0,0,0,.08);
@@ -148,9 +148,28 @@ nav{justify-content:center;}
 
 /* Revisi ukuran banner */
 .hero img{
-    width:auto;
-    width:450px;
-    height:250px;
+    width:auto !important;
+    max-width:90% !important;
+    max-height:260px !important;
     object-fit:contain;
     margin:0 auto;
 }
+
+
+/* Perubahan sesuai screenshot */
+.hero{
+    background:#eef2f5 !important;
+    color:#000 !important;
+}
+
+.auth-box,
+.card{
+    background:#ffffff !important;
+    color:#000 !important;
+    border:1px solid #e5e7eb;
+}
+
+input, textarea{
+    background:#ffffff;
+}
+
