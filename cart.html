@@ -31,7 +31,7 @@
 
 </div>
 
-<div class="payment-box">
+<div class="payment-box" id="paymentBox">
 <h2>Pembayaran</h2>
 <p><strong>Transfer Bank:</strong></p>
 <ul>
@@ -44,7 +44,7 @@
 <h3>QRIS Pembayaran</h3>
 <img src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=ALBIMO-STORE" style="max-width:220px;border-radius:12px;">
 <input type="file" id="transferProof" accept="image/*">
-<p>Silakan upload bukti transfer lalu kirim ke admin.</p>
+<button onclick="uploadProof()">Upload Bukti Transfer</button><p>Silakan upload bukti transfer setelah melakukan pembayaran.</p>
 </div>
 </body>
 </html>
@@ -52,103 +52,58 @@
 <script src="firebase.js"></script>
 <script src="auth.js"></script>
 <script>
-checkRole('user', 'login.html');
-
-const cart = JSON.parse(localStorage.getItem('cart') || '[]');
-const container = document.getElementById('cartContainer');
+checkRole("user", "login.html");
+const cart = JSON.parse(localStorage.getItem("cart") || "[]");
+const container = document.getElementById("cartContainer");
 let total = 0;
-
-function renderCart(){
-container.innerHTML = '';
-total = 0;
-
-if(cart.length === 0){
-container.innerHTML = '<div class="card"><h3>Keranjang masih kosong</h3></div>';
-}
-
-cart.forEach((item,index)=>{
-total += Number(item.price);
-
-container.innerHTML += `
-<div class="product-card">
-<img src="${item.image}">
-<div class="product-content">
-<h3>${item.name}</h3>
-<p>
-${new Intl.NumberFormat('id-ID',{
-    style:'currency',
-    currency:'IDR',
-    minimumFractionDigits:0
-}).format(Number(item.price))}
-</p>
-<button onclick="removeItem(${index})">Hapus</button>
-</div>
-</div>
-`;
-});
-
-document.getElementById('totalPrice').innerText =
-new Intl.NumberFormat('id-ID',{
-    style:'currency',
-    currency:'IDR',
-    minimumFractionDigits:0
-}).format(total);
+let pendingOrderId = localStorage.getItem("pendingOrderId") || null;
 
 function removeItem(index){
-cart.splice(index,1);
-localStorage.setItem('cart', JSON.stringify(cart));
-renderCart();
+  cart.splice(index,1);
+  localStorage.setItem("cart", JSON.stringify(cart));
+  renderCart();
+}
+
+function renderCart(){
+ container.innerHTML=''; total=0;
+ if(cart.length===0){container.innerHTML='<div class="card"><h3>Keranjang masih kosong</h3></div>';}
+ cart.forEach((item,index)=>{
+ total += Number(item.price||0);
+ container.innerHTML += `<div class="product-card"><img src="${item.image}" class="product-image"><div class="product-content"><h3>${item.name}</h3><p>${new Intl.NumberFormat('id-ID',{style:'currency',currency:'IDR',minimumFractionDigits:0}).format(Number(item.price||0))}</p><button onclick="removeItem(${index})">Hapus</button></div></div>`;
+ });
+ document.getElementById('totalPrice').innerText=new Intl.NumberFormat('id-ID',{style:'currency',currency:'IDR',minimumFractionDigits:0}).format(total);
 }
 
 function checkout(){
-if(cart.length === 0){
-alert('Keranjang kosong');
-return;
+ if(cart.length===0) return alert('Keranjang kosong');
+ const user=auth.currentUser; if(!user) return alert('Silakan login terlebih dahulu');
+ const customerName=document.getElementById('customerName').value.trim();
+ const customerPhone=document.getElementById('customerPhone').value.trim();
+ const customerAddress=document.getElementById('customerAddress').value.trim();
+ if(!customerName||!customerPhone||!customerAddress) return alert('Nama, nomor HP dan alamat wajib diisi');
+ const orderId=db.ref('orders').push().key;
+ db.ref('orders/'+orderId).set({userId:user.uid,userEmail:user.email,customerName,customerPhone,customerAddress,items:cart,total,status:'Menunggu Pembayaran',checkoutAt:Date.now()}).then(()=>{
+ pendingOrderId=orderId;
+ localStorage.setItem('pendingOrderId',orderId);
+ alert('Pesanan berhasil dibuat. Silakan transfer via QRIS/Bank dan upload bukti pembayaran.');
+ document.getElementById('transferProof').scrollIntoView({behavior:'smooth'});
+ }).catch(e=>alert('Checkout gagal: '+e.message));
 }
 
-const user = auth.currentUser;
-
-if(!user){
-alert('Silakan login terlebih dahulu');
-window.location.href = 'login.html';
-return;
+function uploadProof(){
+ if(!pendingOrderId) return alert('Silakan checkout terlebih dahulu.');
+ const file=document.getElementById('transferProof').files[0];
+ if(!file) return alert('Pilih bukti transfer terlebih dahulu.');
+ const reader=new FileReader();
+ reader.onload=()=>{
+   db.ref('orders/'+pendingOrderId).update({paymentProof:reader.result,paymentStatus:'Bukti Transfer Diupload',uploadedAt:Date.now()}).then(()=>{
+     alert('Bukti transfer berhasil diupload.');
+     localStorage.removeItem('cart');
+     renderCart();
+   });
+ };
+ reader.readAsDataURL(file);
 }
-
-const customerName = document.getElementById('customerName').value.trim();
-const customerPhone = document.getElementById('customerPhone').value.trim();
-const customerAddress = document.getElementById('customerAddress').value.trim();
-
-if(!customerName || !customerPhone || !customerAddress){
-alert('Nama, nomor HP dan alamat wajib diisi');
-return;
-}
-
-const orderData = {
-userId: user.uid,
-userEmail: user.email,
-customerName,
-customerPhone,
-customerAddress,
-items: cart,
-total: total,
-status: 'Menunggu Konfirmasi',
-checkoutAt: Date.now()
-};
-
-const orderId = db.ref('orders').push().key;
-
-db.ref('orders/' + orderId).set(orderData)
-.then(()=>{
-document.getElementById('paymentBox').style.display='block';
-alert('Pesanan dibuat. Silakan transfer dan upload bukti pembayaran.');
-localStorage.removeItem('cart');
-window.location.reload();
-})
-.catch((error)=>{
-alert('Checkout gagal: ' + error.message);
-});
-}
-
 renderCart();
 </script>
 </body>
